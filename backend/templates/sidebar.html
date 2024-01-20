@@ -1,0 +1,28 @@
+{% url 'main:home' as home %}
+<aside id="sidebar-aside">
+    <div class="sidebar-wrapper shadow">
+        <div class="sidebar">
+            <div class="d-flex justify-content-center align-items-center">
+                <h3 class="card-title text-primary fw-bold">Logo</h3>
+            </div>
+            <hr/>
+            <ul class="list-unstyled">
+                <li class="my-3 bg-primary-subtle rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
+                    <a class="nav-link text-center {% if request.path == home %}link-primary {% else %}link-dark{% endif %} "
+                       href="{{ home }}">
+                        <i class="bi bi-house fs-1"></i>
+                        <small class="my-0">Home</small>
+                    </a>
+                </li>
+                <li class="my-3 rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
+                    <a class="nav-link text-center"
+                       href="{{ home }}">
+                        <i class="bi bi-grid fs-1"></i>
+                        <small class="my-0">Category</small>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</aside>

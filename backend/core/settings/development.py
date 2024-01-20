@@ -7,6 +7,9 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 # CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
+CSRF_TRUSTED_ORIGINS = ['https://87e4-89-199-187-15.ngrok-free.app']
+
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 # CKEDITOR_UPLOAD_PATH = "uploads/"

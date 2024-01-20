@@ -1,0 +1,101 @@
+[
+    {
+        "model": "main.category",
+        "pk": 1,
+        "fields": {
+            "name": "Appetizers",
+            "slug": "appetizers",
+            "description": "Delicious starters to kick off your meal",
+            "image": null,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 2,
+        "fields": {
+            "name": "Main Course",
+            "slug": "main-course",
+            "description": "Heartwarming dishes to satisfy your hunger",
+            "image": null,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 3,
+        "fields": {
+            "name": "Desserts",
+            "slug": "desserts",
+            "description": "Sweet treats to end your meal on a high note",
+            "image": null,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 4,
+        "fields": {
+            "name": "Beverages",
+            "slug": "beverages",
+            "description": "Refreshing drinks to accompany your meal",
+            "image": null,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 5,
+        "fields": {
+            "name": "Salads",
+            "slug": "salads",
+            "description": "Healthy and flavorful salad options",
+            "image": null,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 6,
+        "fields": {
+            "name": "Pasta",
+            "slug": "pasta",
+            "description": "Savory pasta dishes for pasta lovers",
+            "image": null,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 7,
+        "fields": {
+            "name": "Seafood",
+            "slug": "seafood",
+            "description": "Fresh and flavorful seafood options",
+            "image": null,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 8,
+        "fields": {
+            "name": "Vegetarian",
+            "slug": "vegetarian",
+            "description": "Delicious vegetarian dishes for plant-based enthusiasts",
+            "image": null,
+            "is_active": true
+        }
+    },
+    {
+        "model": "main.category",
+        "pk": 9,
+        "fields": {
+            "name": "Steakhouse",
+            "slug": "steakhouse",
+            "description": "Succulent steaks cooked to perfection",
+            "image": null,
+            "is_active": true
+        }
+    }
+]

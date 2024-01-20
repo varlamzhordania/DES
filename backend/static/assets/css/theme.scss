@@ -1,0 +1,32 @@
+
+$primary: #008080;
+$secondary: #FFD700;
+$success: #008000;
+$info: #87CEEB;
+$warning: #FFA500;
+$danger: #FF0000;
+$light: #F0FFF0;
+$dark: #2F4F4F;
+
+$body-bg: #F0FFF0;
+$text-color: $dark;
+$link-color: $primary;
+$link-hover-color: darken($primary, 10%);
+
+$border-radius: 0.7rem;
+$input-border-radius: 0.5rem;
+
+@import "../../../bootstrap-5.3.2/scss/bootstrap";
+
+.form-control {
+  border-width: 2px;
+  background-color: $gray-200;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: rgba($dark, 1);
+  box-shadow: none;
+  background-color: $gray-200;
+}
+        

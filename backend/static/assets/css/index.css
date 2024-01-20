@@ -5,6 +5,8 @@
 
 body {
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    overflow: hidden;
 }
 
 
@@ -14,12 +16,266 @@ body {
     background-size: cover;
     position: relative;
 }
-.tray-food-bg::after{
+
+.tray-food-bg::after {
     content: " ";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.sidebar-wrapper {
+    display: block;
+    position: relative;
+    width: 100px;
+    height: 100vh;
+    background-color: var(--bs-light);
+    transition: 0.2s linear;
+}
+
+.sidebar-wrapper.active {
+    width: 200px;
+}
+
+.sidebar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 0.75rem;
+    height: 100%;
+}
+
+.sidebar li {
+    transition: 0.15s linear;
+}
+
+.sidebar li:hover, .sidebar li:focus, .sidebar li:active {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.backdrop {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+}
+
+.main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 1.5rem;
+    max-height: 100vh;
+    width: calc(100% - 100px);
+    row-gap: 2rem;
+    overflow-y: auto;
+}
+
+.card-category {
+    border-width: 2px;
+    border-color: transparent;
+    height: 120px;
+    color: white;
+    transition: 0.15s linear;
+}
+
+.card-category::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.5) 70%, transparent);
+}
+
+.card-category.active, .card-category:hover {
+    border-color: var(--bs-primary);
+}
+
+.card-food {
+    border: 0;
+    overflow: hidden;
+}
+
+.card-food .card-img {
+    position: relative;
+}
+
+.card-img-wrapper {
+    position: relative;
+}
+
+.card-food .card-img-wrapper::after {
+    content: " ";
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+}
+
+.card-food .card-img {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+
+@media screen and (max-width: 576px) {
+    .sidebar-wrapper {
+        position: fixed;
+        top: 0;
+        left: -35%;
+        width: 35% !important;
+        z-index: 100000;
+        transition: 0.25s linear;
+    }
+
+    .sidebar-wrapper.active {
+        left: 0;
+    }
+
+    .main {
+        width: 100%;
+    }
+
+    .card-category {
+        height: 70px;
+    }
+
+    .category-slider {
+        height: 180px;
+    }
+
+    .card-category .card-title {
+        font-size: 18px;
+    }
+
+    .card-food {
+
+    }
+
+    .card-food .card-title {
+        font-size: 14px;
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .sidebar-wrapper {
+        display: block;
+        position: relative;
+        width: 100px;
+        height: 100vh;
+        background-color: var(--bs-light);
+        transition: 0.2s linear;
+    }
+
+    .sidebar-wrapper.active {
+        width: 200px;
+    }
+
+    .card-category {
+        height: 80px;
+    }
+
+    .category-slider {
+        height: 190px;
+    }
+
+    .card-category .card-title {
+        font-size: 18px;
+    }
+
+    .main {
+        width: calc(100% - 100px);
+    }
+
+    .card-food {
+
+    }
+
+    .card-food .card-title {
+        font-size: 14px;
+    }
+
+}
+
+@media screen and (min-width: 768px) {
+    .card-category {
+        height: 70px;
+    }
+
+    .category-slider {
+        height: 180px;
+    }
+
+    .card-category .card-title {
+        font-size: 18px;
+    }
+
+    .card-food {
+
+    }
+
+    .card-food .card-title {
+        font-size: 14px;
+    }
+
+}
+
+@media screen and (min-width: 992px) {
+    .card-category {
+        height: 100px;
+    }
+
+    .category-slider {
+        height: 240px;
+    }
+
+    .card-category .card-title {
+        font-size: 22px;
+    }
+
+    .card-food {
+
+    }
+
+    .card-food .card-title {
+        font-size: 18px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .card-category {
+        height: 120px;
+    }
+
+    .category-slider {
+        height: 280px;
+    }
+
+    .card-category .card-title {
+        font-size: 22px;
+    }
+
+    .card-food {
+
+    }
+
+    .card-food .card-title {
+        font-size: 18px;
+    }
+
+}
+
+@media screen and (min-width: 1400px) {
+
 }

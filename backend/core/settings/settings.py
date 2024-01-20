@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-)c+dzgaz20tlbxt$qtm&svm4-31pjv*+ayq@5wzzq1@789^!vr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'stream.apps.StreamConfig',
     'account.apps.AccountConfig',
+    'settings.apps.SettingsConfig',
     # External Applications
 ]
 
@@ -68,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.Default'
             ],
         },
     },
@@ -127,3 +129,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ASGI_APPLICATION = 'core.asgi.application'
 
 LOGIN_URL = 'account:login'
+AUTH_USER_MODEL = "account.User"

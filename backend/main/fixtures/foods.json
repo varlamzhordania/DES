@@ -1,0 +1,422 @@
+[
+  {
+    "model": "main.food",
+    "pk": 1,
+    "fields": {
+      "name": "Mozzarella Sticks",
+      "slug": "mozzarella-sticks",
+      "description": "Golden and crispy mozzarella sticks",
+      "category": 1,
+      "thumbnail": null,
+      "price": "6.99",
+      "ingredients": "Mozzarella cheese, breadcrumbs, marinara sauce",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 2,
+    "fields": {
+      "name": "Margherita Pizza",
+      "slug": "margherita-pizza",
+      "description": "Classic pizza with tomato, mozzarella, and basil",
+      "category": 2,
+      "thumbnail": null,
+      "price": "12.99",
+      "ingredients": "Tomato sauce, mozzarella cheese, basil",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 3,
+    "fields": {
+      "name": "Chocolate Brownie",
+      "slug": "chocolate-brownie",
+      "description": "Rich and fudgy chocolate brownie",
+      "category": 3,
+      "thumbnail": null,
+      "price": "4.99",
+      "ingredients": "Chocolate, butter, sugar, eggs, flour",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 4,
+    "fields": {
+      "name": "Spinach Artichoke Dip",
+      "slug": "spinach-artichoke-dip",
+      "description": "Creamy spinach and artichoke dip",
+      "category": 1,
+      "thumbnail": null,
+      "price": "8.99",
+      "ingredients": "Spinach, artichokes, cream cheese, garlic",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 5,
+    "fields": {
+      "name": "Chicken Alfredo",
+      "slug": "chicken-alfredo",
+      "description": "Creamy Alfredo pasta with grilled chicken",
+      "category": 2,
+      "thumbnail": null,
+      "price": "14.99",
+      "ingredients": "Fettuccine pasta, Alfredo sauce, grilled chicken",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 6,
+    "fields": {
+      "name": "Tiramisu",
+      "slug": "tiramisu",
+      "description": "Classic Italian tiramisu dessert",
+      "category": 3,
+      "thumbnail": null,
+      "price": "7.99",
+      "ingredients": "Ladyfingers, coffee, mascarpone, cocoa powder",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 7,
+    "fields": {
+      "name": "Iced Tea",
+      "slug": "iced-tea",
+      "description": "Refreshing iced tea",
+      "category": 4,
+      "thumbnail": null,
+      "price": "2.99",
+      "ingredients": "Tea, ice, lemon",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 8,
+    "fields": {
+      "name": "Greek Salad",
+      "slug": "greek-salad",
+      "description": "Fresh and vibrant Greek salad",
+      "category": 5,
+      "thumbnail": null,
+      "price": "9.99",
+      "ingredients": "Cucumbers, tomatoes, olives, feta cheese",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 9,
+    "fields": {
+      "name": "Pesto Linguine",
+      "slug": "pesto-linguine",
+      "description": "Linguine pasta with homemade basil pesto sauce",
+      "category": 6,
+      "thumbnail": null,
+      "price": "11.99",
+      "ingredients": "Linguine pasta, basil, pine nuts, Parmesan cheese",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 10,
+    "fields": {
+      "name": "Grilled Shrimp",
+      "slug": "grilled-shrimp",
+      "description": "Grilled shrimp skewers with lemon and herbs",
+      "category": 7,
+      "thumbnail": null,
+      "price": "16.99",
+      "ingredients": "Shrimp, lemon, herbs",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 11,
+    "fields": {
+      "name": "Vegetable Stir-Fry",
+      "slug": "vegetable-stir-fry",
+      "description": "Fresh and colorful vegetable stir-fry",
+      "category": 8,
+      "thumbnail": null,
+      "price": "11.99",
+      "ingredients": "Assorted vegetables, soy sauce, garlic",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 12,
+    "fields": {
+      "name": "Ribeye Steak",
+      "slug": "ribeye-steak",
+      "description": "Juicy ribeye steak cooked to perfection",
+      "category": 9,
+      "thumbnail": null,
+      "price": "22.99",
+      "ingredients": "Ribeye steak, seasoning",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 13,
+    "fields": {
+      "name": "Crunchy Spring Rolls",
+      "slug": "crunchy-spring-rolls",
+      "description": "Crispy spring rolls filled with vegetables",
+      "category": 1,
+      "thumbnail": null,
+      "price": "9.99",
+      "ingredients": "Vegetables, rice paper, dipping sauce",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 14,
+    "fields": {
+      "name": "Beef Lasagna",
+      "slug": "beef-lasagna",
+      "description": "Layered pasta with savory beef and melted cheese",
+      "category": 2,
+      "thumbnail": null,
+      "price": "15.99",
+      "ingredients": "Beef, pasta, marinara sauce, cheese",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 15,
+    "fields": {
+      "name": "Mango Sorbet",
+      "slug": "mango-sorbet",
+      "description": "Refreshing mango-flavored sorbet",
+      "category": 3,
+      "thumbnail": null,
+      "price": "5.99",
+      "ingredients": "Mango, sugar, lemon juice",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 16,
+    "fields": {
+      "name": "Lemonade",
+      "slug": "lemonade",
+      "description": "Homemade lemonade with a hint of mint",
+      "category": 4,
+      "thumbnail": null,
+      "price": "3.99",
+      "ingredients": "Lemons, sugar, water, mint",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 17,
+    "fields": {
+      "name": "Caprese Salad",
+      "slug": "caprese-salad",
+      "description": "Tomato, mozzarella, and basil salad drizzled with balsamic glaze",
+      "category": 5,
+      "thumbnail": null,
+      "price": "8.99",
+      "ingredients": "Tomatoes, mozzarella, basil, balsamic glaze",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 18,
+    "fields": {
+      "name": "Chicken Pesto Pasta",
+      "slug": "chicken-pesto-pasta",
+      "description": "Pasta with grilled chicken and homemade pesto sauce",
+      "category": 6,
+      "thumbnail": null,
+      "price": "13.99",
+      "ingredients": "Pasta, chicken, basil pesto",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 19,
+    "fields": {
+      "name": "Garlic Butter Shrimp",
+      "slug": "garlic-butter-shrimp",
+      "description": "Juicy shrimp cooked in garlic butter",
+      "category": 7,
+      "thumbnail": null,
+      "price": "17.99",
+      "ingredients": "Shrimp, garlic, butter, herbs",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 20,
+    "fields": {
+      "name": "Vegetarian Burrito Bowl",
+      "slug": "vegetarian-burrito-bowl",
+      "description": "Healthy and hearty vegetarian burrito bowl",
+      "category": 8,
+      "thumbnail": null,
+      "price": "11.99",
+      "ingredients": "Rice, black beans, vegetables, salsa",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 21,
+    "fields": {
+      "name": "Filet Mignon",
+      "slug": "filet-mignon",
+      "description": "Tender filet mignon steak cooked to perfection",
+      "category": 9,
+      "thumbnail": null,
+      "price": "26.99",
+      "ingredients": "Filet mignon, seasoning",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 22,
+    "fields": {
+      "name": "Vegetable Dumplings",
+      "slug": "vegetable-dumplings",
+      "description": "Steamed dumplings filled with assorted vegetables",
+      "category": 1,
+      "thumbnail": null,
+      "price": "10.99",
+      "ingredients": "Vegetables, dumpling wrappers, soy sauce",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 23,
+    "fields": {
+      "name": "Chicken Parmesan",
+      "slug": "chicken-parmesan",
+      "description": "Breaded chicken topped with marinara sauce and melted cheese",
+      "category": 2,
+      "thumbnail": null,
+      "price": "16.99",
+      "ingredients": "Chicken, breadcrumbs, marinara sauce, cheese",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 24,
+    "fields": {
+      "name": "Triple Chocolate Cake",
+      "slug": "triple-chocolate-cake",
+      "description": "Decadent triple chocolate layer cake",
+      "category": 3,
+      "thumbnail": null,
+      "price": "8.99",
+      "ingredients": "Chocolate, cocoa, butter, sugar",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 25,
+    "fields": {
+      "name": "Mint Mojito",
+      "slug": "mint-mojito",
+      "description": "Refreshing mint-flavored mojito",
+      "category": 4,
+      "thumbnail": null,
+      "price": "4.99",
+      "ingredients": "Mint leaves, lime, sugar, soda",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 26,
+    "fields": {
+      "name": "Caesar Salad",
+      "slug": "caesar-salad",
+      "description": "Classic Caesar salad with crisp romaine lettuce and Caesar dressing",
+      "category": 5,
+      "thumbnail": null,
+      "price": "7.99",
+      "ingredients": "Romaine lettuce, croutons, Parmesan cheese",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 27,
+    "fields": {
+      "name": "Shrimp Scampi",
+      "slug": "shrimp-scampi",
+      "description": "Buttery and garlicky shrimp scampi over pasta",
+      "category": 6,
+      "thumbnail": null,
+      "price": "15.99",
+      "ingredients": "Shrimp, garlic, butter, white wine",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 28,
+    "fields": {
+      "name": "Coconut Shrimp",
+      "slug": "coconut-shrimp",
+      "description": "Crispy coconut-crusted shrimp with a sweet dipping sauce",
+      "category": 7,
+      "thumbnail": null,
+      "price": "18.99",
+      "ingredients": "Shrimp, coconut flakes, sweet chili sauce",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 29,
+    "fields": {
+      "name": "Vegetarian Sushi Roll",
+      "slug": "vegetarian-sushi-roll",
+      "description": "Sushi roll with avocado, cucumber, and carrots",
+      "category": 8,
+      "thumbnail": null,
+      "price": "12.99",
+      "ingredients": "Avocado, cucumber, carrots, sushi rice",
+      "is_active": true
+    }
+  },
+  {
+    "model": "main.food",
+    "pk": 30,
+    "fields": {
+      "name": "Tomahawk Steak",
+      "slug": "tomahawk-steak",
+      "description": "Impressive and flavorful tomahawk steak",
+      "category": 9,
+      "thumbnail": null,
+      "price": "32.99",
+      "ingredients": "Tomahawk steak, seasoning",
+      "is_active": true
+    }
+  }
+]

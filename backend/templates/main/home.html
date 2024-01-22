@@ -26,7 +26,7 @@
             {% for category in categories %}
                 <swiper-slide>
                     <a href="/?category={{ category.slug }}">
-                        <div class="card card-category overflow-hidden">
+                        <div class="card card-category {% if category_param == category.slug %}active{% endif %} overflow-hidden">
                             {% if category.image %}
                                 <img src="{{ category.image.url }}" alt="{{ category.name }}"
                                      class="card-img h-100 object-fit-cover"/>
@@ -51,7 +51,7 @@
             Foods
         </h3>
 
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 g-lg-5">
             {% for food in foods %}
                 <div class="col">
                     <div class="card card-food h-100 bg-light shadow">
@@ -64,21 +64,39 @@
 
                             {% endif %}
                         </div>
-                        <span class="position-absolute fs-3 text-white bg-white bg-opacity-25 px-2 pt-1 rounded"  style="left:10px;top:10px">
+                        <span class="position-absolute fs-3 text-white bg-white bg-opacity-25 px-2 pt-1 rounded"
+                              style="left:10px;top:10px">
                             <i class="bi bi-exclamation-circle"></i>
                         </span>
                         <div class="card-body">
                             <h3 class="card-title fw-bold">
                                 {{ food.name }}
                             </h3>
-                            <h4 class="card-title text-primary">${{ food.price }}</h4>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <h4 class="card-title text-primary fw-normal">${{ food.price }}</h4>
+                                <button class="btn btn-sm btn-secondary text-white btn-order" data-id="{{ food.id }}"><i
+                                        class="bi bi-cart-plus me-2"></i>ORDER
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             {% endfor %}
-
         </div>
     </section>
+    <!-- Modal -->
+    <div class="modal fade " id="modal-order" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl ">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input type="hidden" name="food-id" id="food-id" value="">
+                    <div id="modal-order-content">
+                        {% include 'loader.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}

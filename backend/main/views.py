@@ -8,13 +8,14 @@ from .models import Category, Food
 @login_required
 def home(request, *args, **kwargs):
     categories = Category.objects.filter(is_active=True)
-    category = request.GET.get("category", None)
+    category_param = request.GET.get("category", None)
     foods = Food.objects.all()
-    if category:
-        foods = foods.filter(category__slug=category)
+    if category_param:
+        foods = foods.filter(category__slug=category_param)
     my_context = {
         "Title": "DES Project",
         "categories": categories,
-        "foods": foods
+        "foods": foods,
+        "category_param": category_param,
     }
     return render(request, "main/home.html", my_context)

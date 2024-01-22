@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import User, Seat
+
+
+class SeatInline(admin.StackedInline):
+    model = Seat
 
 
 class CustomUserAdmin(UserAdmin):
@@ -10,6 +14,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ("is_staff", "is_active", "is_online")
     search_fields = ("id", "username",)
     ordering = ("-is_online", "-id")
+    inlines = [SeatInline]
 
 
 admin.site.register(User, CustomUserAdmin)

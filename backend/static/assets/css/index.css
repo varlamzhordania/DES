@@ -78,7 +78,7 @@ body {
 }
 
 .card-category {
-    border-width: 2px;
+    border-width: 4px;
     border-color: transparent;
     height: 120px;
     color: white;
@@ -128,6 +128,59 @@ body {
     border-bottom-right-radius: 0;
 }
 
+.seat-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    align-items: center;
+    width: 100%;
+}
+
+.seat {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    background-color: var(--bs-gray-400);
+    border-radius: var(--bs-border-radius);
+    border-color: transparent !important;
+}
+
+.seat.seat-sm {
+    width: 35px;
+    height: 35px;
+}
+
+.seat.seat-lg {
+    width: 55px;
+    height: 55px;
+}
+
+.seat svg {
+    width: 45px;
+    height: 45px;
+}
+
+.seat.seat-deactive {
+    background-color: var(--bs-gray-300);
+}
+
+.seat.seat-deactive svg {
+    color: var(--bs-gray-600);
+}
+
+.seat.seat-active {
+    background-color: var(--bs-primary-bg-subtle);
+}
+
+.seat.seat-active svg {
+    color: var(--bs-primary);
+}
 
 @media screen and (max-width: 576px) {
     .sidebar-wrapper {

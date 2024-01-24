@@ -21,28 +21,8 @@
                 height: calc((100% - 40px) / 2) !important;
             }
         </style>
-        <swiper-container init="false"
-        >
-            {% for category in categories %}
-                <swiper-slide>
-                    <a href="/?category={{ category.slug }}">
-                        <div class="card card-category {% if category_param == category.slug %}active{% endif %} overflow-hidden">
-                            {% if category.image %}
-                                <img src="{{ category.image.url }}" alt="{{ category.name }}"
-                                     class="card-img h-100 object-fit-cover"/>
-                            {% else %}
-                                <img src="{% static '/assets/image/category-default.jpg' %}" alt="{{ category.name }}"
-                                     class="card-img h-100 object-fit-cover"/>
-                            {% endif %}
-                            <div class="card-img-overlay d-flex align-items-center">
-                                <h3 class="card-title text-light position-relative d-block z-1 mb-0">
-                                    {{ category.name }}
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                </swiper-slide>
-            {% endfor %}
+        <swiper-container init="false" id="category-list">
+            {% include 'loader.html' %}
         </swiper-container>
     </section>
     <section class="position-relative d-block mt-5">
@@ -51,42 +31,13 @@
             Foods
         </h3>
 
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 g-lg-5">
-            {% for food in foods %}
-                <div class="col">
-                    <div class="card card-food h-100 bg-light shadow">
-                        <div class="card-img-wrapper">
-                            {% if food.thumbnail %}
-                                <img src="{{ food.thumbnail.url }}" alt="{{ food.name }}" class="card-img"/>
-                            {% else %}
-                                <img src="{% static '/assets/image/food-default.jpg' %}" alt="{{ food.name }}"
-                                     class="card-img"/>
-
-                            {% endif %}
-                        </div>
-                        <span class="position-absolute fs-3 text-white bg-white bg-opacity-25 px-2 pt-1 rounded"
-                              style="left:10px;top:10px">
-                            <i class="bi bi-exclamation-circle"></i>
-                        </span>
-                        <div class="card-body">
-                            <h3 class="card-title fw-bold">
-                                {{ food.name }}
-                            </h3>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <h4 class="card-title text-primary fw-normal">${{ food.price }}</h4>
-                                <button class="btn btn-sm btn-secondary text-white btn-order" data-id="{{ food.id }}"><i
-                                        class="bi bi-cart-plus me-2"></i>ORDER
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 g-lg-5" id="food-list">
+            <div class="col col-12">{% include 'loader.html' %}</div>
         </div>
     </section>
     <!-- Modal -->
     <div class="modal fade " id="modal-order" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl ">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-lg-down modal-xl ">
             <div class="modal-content">
                 <div class="modal-body">
                     <input type="hidden" name="food-id" id="food-id" value="">
@@ -103,28 +54,6 @@
     <script src="{% static '/assets/swiper/swiper.js' %}" type="text/javascript"></script>
 
     <script>
-        const swiperEl = document.querySelector('swiper-container')
-        Object.assign(swiperEl, {
-            spaceBetween: 15,
-            slidesPerView: 2,
-            scrollbar: true,
-            grid: {
-                rows: 2,
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                    scrollbar: false,
-                },
-                768: {
-                    slidesPerView: 3,
-                },
-                1024: {
-                    slidesPerView: 4,
-                },
-            },
-        });
-        swiperEl.initialize();
+
     </script>
 {% endblock %}

@@ -1,5 +1,4 @@
 :root {
-
 }
 
 
@@ -83,6 +82,7 @@ body {
     height: 120px;
     color: white;
     transition: 0.15s linear;
+    cursor: pointer;
 }
 
 .card-category::after {
@@ -137,6 +137,8 @@ body {
     gap: 1.5rem;
     align-items: center;
     width: 100%;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .seat {
@@ -181,6 +183,8 @@ body {
 .seat.seat-active svg {
     color: var(--bs-primary);
 }
+
+
 
 @media screen and (max-width: 576px) {
     .sidebar-wrapper {

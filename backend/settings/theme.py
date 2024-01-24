@@ -37,6 +37,7 @@ $link-hover-color: darken($primary, 10%);
 
 $border-radius: 0.7rem;
 $input-border-radius: 0.5rem;
+$offcanvas-horizontal-width :600px;
 
 @import "../../../bootstrap-5.3.2/scss/bootstrap";
 

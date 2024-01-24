@@ -31,11 +31,36 @@
 {% block outer_content %}
     {% include 'sidebar.html' %}
     <main class="main">
-        <header>
-            <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
-                <i class="bi bi-list text-light fs-5"></i>
+        <header class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-start align-self-center gap-2">
+                <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
+                    <i class="bi bi-list text-light fs-5"></i>
+                </button>
+                <span class="badge bg-secondary fs-5 lh-base">Table: {{ request.user.get_name }}</span>
+            </div>
+            <button class="btn btn-primary text-primary border-0 fs-4 bg-primary-subtle position-relative"
+                    id="shopping-cart-btn">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle border border-3 border-light bg-danger"
+                      style="font-size: 12px!important;" id="shopping-cart-quantity">
+                0
+                </span>
+                <i class="bi bi-cart "></i>
             </button>
-            <span class="badge bg-secondary fs-5">Table: {{ request.user.get_name }}</span>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="shopping-cart-canvas">
+                <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title fw-bold fs-3" id="shopping-cart-canvas-label">Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body" id="shoppingCartBody">
+
+                </div>
+                <div class="offcanvas-footer px-3 py-4 border border-top">
+                    <div class="">
+                        <h4 class="fw-bold">Total: <span class="fw-normal" id="shopping-cart-total">$0</span></h4>
+                        <button class="w-100 btn btn-primary text-white my-4 btn-lg text-uppercase fw-bold">Submit Order</button>
+                    </div>
+                </div>
+            </div>
         </header>
         {% block content %}
 

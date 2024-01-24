@@ -1,6 +1,8 @@
 class ShoppingCart {
 
     constructor() {
+        this.cartQuantity = document.querySelector("#shopping-cart-quantity")
+        this.shoppingCartTotal = document.querySelector("#shopping-cart-total")
         this.items = [];
     }
 
@@ -14,7 +16,6 @@ class ShoppingCart {
         if (existingIndex !== -1) {
             this.items[existingIndex].quantity += quantity;
             if (this.items[existingIndex].seats.filter(seatId => seatId === seat).length <= 0) {
-                console.log("not exist")
                 this.items[existingIndex].seats.push(seat)
 
             }
@@ -71,6 +72,14 @@ class ShoppingCart {
         }
     }
 
+    getFoodSeats(index) {
+        return this?.items[index]?.seats || []
+    }
+
+    getQuantity() {
+        return this.items.reduce((total, item) => total + item.quantity, 0);
+    }
+
     calculateTotal() {
         return this.items.reduce((total, item) => total + item.quantity * item.price, 0);
     }
@@ -86,7 +95,10 @@ class ShoppingCart {
     updateCart() {
         this.displayCart();
 
+        this.cartQuantity.textContent = this.getQuantity()
+        this.shoppingCartTotal.textContent = '$' + this.calculateTotal().toFixed(2)
     }
+
 }
 
 export default ShoppingCart

@@ -161,3 +161,4 @@ cython_debug/
 node_modules/
 backend/bootstrap-5.3.2
 media/
+!backend/static/assets/lib

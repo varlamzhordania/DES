@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'stream.apps.StreamConfig',
     'account.apps.AccountConfig',
     'settings.apps.SettingsConfig',
+    'checkout.apps.CheckoutConfig',
     # External Applications
     'rest_framework',
     "corsheaders",

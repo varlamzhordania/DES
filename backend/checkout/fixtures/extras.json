@@ -1,0 +1,137 @@
+[
+  {
+    "model": "checkout.extra",
+    "pk": 1,
+    "fields": {
+      "name": "Napkin",
+      "price": "0.50",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 2,
+    "fields": {
+      "name": "Extra Sauce",
+      "price": "1.00",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 3,
+    "fields": {
+      "name": "Cheese Toppings",
+      "price": "1.50",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 4,
+    "fields": {
+      "name": "Spicy Jalapenos",
+      "price": "0.75",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 5,
+    "fields": {
+      "name": "Garlic Bread",
+      "price": "2.00",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 6,
+    "fields": {
+      "name": "Avocado Slices",
+      "price": "2.50",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 7,
+    "fields": {
+      "name": "Sour Cream",
+      "price": "1.25",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 8,
+    "fields": {
+      "name": "Bacon Bits",
+      "price": "1.75",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 9,
+    "fields": {
+      "name": "Fresh Basil",
+      "price": "1.20",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 10,
+    "fields": {
+      "name": "Caramel Drizzle",
+      "price": "2.25",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 11,
+    "fields": {
+      "name": "Honey Mustard",
+      "price": "1.50",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 12,
+    "fields": {
+      "name": "Crushed Red Pepper",
+      "price": "0.60",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 13,
+    "fields": {
+      "name": "Salsa Verde",
+      "price": "1.80",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 14,
+    "fields": {
+      "name": "Sun-Dried Tomatoes",
+      "price": "2.20",
+      "is_active": true
+    }
+  },
+  {
+    "model": "checkout.extra",
+    "pk": 15,
+    "fields": {
+      "name": "Pesto Sauce",
+      "price": "2.30",
+      "is_active": true
+    }
+  }
+]

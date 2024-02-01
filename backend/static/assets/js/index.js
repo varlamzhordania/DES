@@ -73,16 +73,17 @@ document.addEventListener("DOMContentLoaded", () => {
                               style="left:10px;top:10px">
                             <i class="bi bi-exclamation-circle"></i>
                         </span>
-                        <div class="card-body">
+                        <div class="card-body ">
                             <h3 class="card-title fw-bold">
                                 ${food.name}
                             </h3>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <h4 class="card-title text-primary fw-normal">${food.price}</h4>
-                                <button class="btn btn-sm btn-secondary text-white btn-order" data-id="${food.id}"><i
-                                        class="bi bi-cart-plus me-2"></i>ORDER
-                                </button>
-                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 d-md-flex d-grid justify-content-md-between align-items-center">     
+                            <h4 class="card-title text-primary fw-normal">$${food.price}</h4>
+                            <button class="btn btn-sm btn-secondary text-white btn-order" data-id="${food.id}">
+                                <i class="bi bi-cart-plus me-2"></i>
+                                ORDER
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -177,9 +178,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="col col-9 ps-2">
                 <h4>${data.name}</h4>
                 <span class="text-primary">$${Number(data.price).toFixed(2)}</span>
+                <span class="text-secondary">x${Number(data.quantity)}</span>
             </div>
             <div class="col-1 align-self-center">
-                <button class="btn text-dark float-end">
+                <button class="btn text-dark float-end shopping-cart-item-remove" data-id="${data.id}" onclick="removeItemFromShoppingCart(event)">
                     <i class="bi bi-x-lg "></i>
                 </button>
             </div>
@@ -205,6 +207,15 @@ document.addEventListener("DOMContentLoaded", () => {
    `;
 
         return output;
+    }
+
+    const addBtnShoppingCartRemove = () => {
+        const btnList = document.querySelectorAll(".shopping-cart-item-remove")
+        btnList.forEach(button => {
+            button.addEventListener("click", () => {
+
+            })
+        })
     }
 
     const renderUserSeats = async (foodId) => {
@@ -244,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (target.classList.contains("seat-active")) {
                     target.classList.remove("seat-active")
                     target.classList.add("seat-deactive")
-                    myCart.decreaseQuantity(loadedFood.id, 1, id)
+                    myCart.decreaseQuantity(loadedFood.id, 1, id, loadedFood.name)
                     return
                 }
             })
@@ -295,13 +306,14 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     }
 
-    const loadShoppingCartEvent = () => {
+    window.loadShoppingCartEvent = () => {
 
         shoppingCartCanvas.show()
         const ulElement = document.createElement("ul")
-        ulElement.classList.add("list-unstyled","overflow-y-auto","overflow-x-hidden")
+        ulElement.classList.add("list-unstyled", "overflow-y-auto", "overflow-x-hidden")
         myCart.items.forEach(item => {
             const fullData = FOOD_LIST.filter(food_item => food_item.id == item.id)[0]
+            fullData["quantity"] = item.quantity
             ulElement.innerHTML += checkoutTemplate.apply(fullData)
         })
         shoppingCartBody.innerHTML = ''
@@ -309,9 +321,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    window.openShoppingCartInModal =() => {
+    window.openShoppingCartInModal = () => {
         orderModal.hide()
         loadShoppingCartEvent()
+    }
+    window.removeItemFromShoppingCart = (e) => {
+        const id = e.currentTarget.getAttribute("data-id")
+        myCart.removeItem(id)
+
     }
 
     shoppingCartBtn.addEventListener("click", loadShoppingCartEvent)

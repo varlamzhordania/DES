@@ -23,6 +23,7 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', include("main.urls", namespace="main")),
                   path('', include("account.urls", namespace="account")),
-                  path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+                  path('', include("checkout.urls", namespace="checkout")),
+                  path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

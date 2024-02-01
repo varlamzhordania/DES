@@ -1,20 +1,21 @@
 
-$primary: #008080;
-$secondary: #FFD700;
+$primary: #0000FF;
+$secondary: #FF0000;
 $success: #008000;
 $info: #87CEEB;
-$warning: #FFA500;
+$warning: #FFD700;
 $danger: #FF0000;
-$light: #F0FFF0;
+$light: #F0F8FF;
 $dark: #2F4F4F;
 
-$body-bg: #F0FFF0;
+$body-bg: #F0F8FF;
 $text-color: $dark;
 $link-color: $primary;
 $link-hover-color: darken($primary, 10%);
 
 $border-radius: 0.7rem;
 $input-border-radius: 0.5rem;
+$offcanvas-horizontal-width :600px;
 
 @import "../../../bootstrap-5.3.2/scss/bootstrap";
 

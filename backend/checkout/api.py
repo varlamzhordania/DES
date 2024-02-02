@@ -1,9 +1,9 @@
 from rest_framework.response import Response
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, ListAPIView
 from rest_framework import status
 from rest_framework.views import APIView
-from .serializers import CartSerializer, CartItemSerializer
-from .models import CartItem, Cart
+from .serializers import CartSerializer, CartItemSerializer, ExtraSerializer,TipSerializer
+from .models import CartItem, Cart, Extra, Tip
 from main.models import Food
 from django.db import transaction
 from django.db.models import Q
@@ -27,14 +27,17 @@ class CartView(APIView):
 
             with transaction.atomic():
                 new_list = []
-
                 for item in data:
                     food_id = item.get('id')
                     quantity = item.get('quantity', 1)
-                    extras = item.get('extras', [])
                     seats = item.get('seats', [])
-
-                    food = get_object_or_404(Food, pk=food_id)
+                    try:
+                        food = Food.objects.get(pk=food_id, is_active=True)
+                    except Food.DoesNotExist:
+                        return Response(
+                            {"error": "food is not available", "data": item},
+                            status=status.HTTP_404_NOT_FOUND
+                        )
 
                     cart_item_data = {'quantity': quantity}
 
@@ -42,7 +45,6 @@ class CartView(APIView):
                         cart=user_cart, food=food, defaults=cart_item_data
                     )
 
-                    cart_item.extras.set(extras)
                     cart_item.seats.set(seats)
                     new_list.append(cart_item.id)
 
@@ -65,3 +67,13 @@ class CartView(APIView):
                 {"error": "Ops!!! something went wrong when trying to update cart"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class ExtraView(ListAPIView):
+    queryset = Extra.objects.filter(is_active=True)
+    serializer_class = ExtraSerializer
+
+
+class TipView(ListAPIView):
+    queryset = Tip.objects.filter(is_active=True)
+    serializer_class = TipSerializer

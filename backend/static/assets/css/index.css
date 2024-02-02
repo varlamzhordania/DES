@@ -184,7 +184,9 @@ body {
     color: var(--bs-primary);
 }
 
-
+.form-check-extra {
+    flex-basis: 250px;
+}
 
 @media screen and (max-width: 576px) {
     .sidebar-wrapper {

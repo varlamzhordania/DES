@@ -27,6 +27,25 @@ class Extra(models.Model):
         return self.name
 
 
+class Tip(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_("Tip Name"))
+    amount = models.DecimalField(max_digits=6, decimal_places=2, verbose_name=_("Tip Amount"))
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name=_("Visibility"),
+        help_text=_("format: true=visible, false=hidden")
+    )
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Date Create"), blank=True, null=True)
+    update_at = models.DateTimeField(auto_now=True, verbose_name=_("Date Modified"), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Tip")
+        verbose_name_plural = _("Tips")
+
+    def __str__(self):
+        return f"{self.name} - {self.amount}"
+
+
 class Cart(models.Model):
     user = models.OneToOneField(
         get_user_model(),
@@ -50,6 +69,7 @@ class Cart(models.Model):
 
     def get_items(self):
         items = self.cart_items.all()
+        items.filter(food__is_active=False).delete()
         return items
 
     def get_total_price(self):

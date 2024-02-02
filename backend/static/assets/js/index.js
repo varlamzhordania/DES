@@ -1,4 +1,6 @@
 import ShoppingCart from "./cart.js"
+import {FOOD_LIST, EXTRA_LIST, TIP_LIST} from "./constant.js";
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -11,14 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const categoryListContainer = document.querySelector("#category-list")
     const shoppingCartBtn = document.querySelector("#shopping-cart-btn")
     const shoppingCartBody = document.querySelector("#shoppingCartBody")
+    const btnCheckout = document.querySelector("#btn-checkout")
     const myCart = new ShoppingCart();
-    const FOOD_LIST = []
     const DEFAULT_FOOD_URL = '/static/assets/image/food-default.jpg'
     const DEFAULT_CATEGORY_URL = 'static/assets/image/category-default.jpg'
     let btnOrders;
     let shoppingCartCanvas;
     let categoryParam
     let loadedFood = {};
+    let extraSelected = []
+    let tipSelected = {}
     let orderModal;
 
     const triggerToast = (item) => {
@@ -43,6 +47,84 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.querySelector("#shopping-cart-canvas"))
         shoppingCartCanvas = new bootstrap.Offcanvas('#shopping-cart-canvas')
 
+
+    const handleExtrasAmount = () => {
+        return extraSelected.reduce((total, item) => parseFloat(item.price) + total, parseFloat('0.00'))
+    }
+    const handleTotalAmount = () => {
+        const extraAmount = handleExtrasAmount()
+        const tipAmount = tipSelected.amount || 0
+        const total = myCart.calculateTotal() + extraAmount + tipAmount
+        document.querySelector("#total-amount").textContent = '$' + total.toFixed(2)
+        return total
+    }
+
+
+    if (btnCheckout)
+        btnCheckout.addEventListener("click", async () => {
+            const targetModal = new bootstrap.Modal("#modal-checkout", {})
+            targetModal.show()
+
+            const extras = await getData(`/api/extra-list/`)
+            const tips = await getData(`/api/tip-list/`)
+
+            const extrasDiv = targetModal._element.querySelector("#extras")
+            const tipsDiv = targetModal._element.querySelector("#tips")
+            handleTotalAmount()
+
+            extrasDiv.innerHTML = ``
+            tipsDiv.innerHTML = ``
+
+            extras.forEach(extra => {
+                EXTRA_LIST.push(extra)
+
+                extrasDiv.innerHTML += `
+                   <div class="form-check form-check-inline form-check-extra">
+                      <input class="form-check-input extra-checkbox" type="checkbox" id="extra-checkbox-${extra.id}" data-price="${extra.price}" value="${extra.id}">
+                        <label class="form-check-label" for="extra-checkbox-${extra.id}">
+                            ${extra.name} 
+                            <small class="fw-bold">
+                            ($${extra.price})
+                            </small>
+                        </label>
+                   </div>
+                `
+            })
+
+            tips.forEach(tip => {
+                TIP_LIST.push(tip)
+                tipsDiv.innerHTML += `
+                    <div>
+                        <input type="radio" class="btn-check tips-radio" name="tips" id="tip-${tip.id}" data-amount="${tip.amount}" autocomplete="off" value="${tip.id}">
+                        <label class="btn btn-outline-dark" for="tip-${tip.id}" style="--bs-btn-active-color: #fff;">${tip.name} <small class="fw-bold">($${tip.amount})</small></label>
+                    </div>
+                `
+            })
+
+            document.querySelectorAll(".extra-checkbox").forEach(checkbox => {
+                checkbox.addEventListener("change", (e) => {
+                    if (e.target.checked) {
+                        let price = e.target.getAttribute("data-price")
+                        extraSelected.push({"id": e.target.value, "price": parseFloat(price)})
+                        document.querySelector("#extras-amount").textContent = '$' + handleExtrasAmount().toFixed(2)
+                    } else {
+                        extraSelected = extraSelected.filter(ex => ex.id !== e.target.value)
+                        document.querySelector("#extras-amount").textContent = '$' + handleExtrasAmount().toFixed(2)
+                    }
+                    handleTotalAmount()
+                })
+            })
+            document.querySelectorAll(".tips-radio").forEach(radio => {
+                radio.addEventListener("click", (e) => {
+                    let amount = parseFloat(e.target.getAttribute("data-amount"))
+                    tipSelected = {"id": e.target.value, "amount": amount}
+                    document.querySelector("#tip-amount").textContent = '$' + amount
+                    handleTotalAmount()
+                })
+            })
+
+
+        })
 
     if (document.querySelector("#modal-order"))
         orderModal = new bootstrap.Modal('#modal-order', {})
@@ -313,8 +395,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ulElement.classList.add("list-unstyled", "overflow-y-auto", "overflow-x-hidden")
         myCart.items.forEach(item => {
             const fullData = FOOD_LIST.filter(food_item => food_item.id == item.id)[0]
-            fullData["quantity"] = item.quantity
-            ulElement.innerHTML += checkoutTemplate.apply(fullData)
+            if (fullData) {
+                fullData["quantity"] = item.quantity
+                ulElement.innerHTML += checkoutTemplate.apply(fullData)
+            }
         })
         shoppingCartBody.innerHTML = ''
         shoppingCartBody.appendChild(ulElement)
@@ -328,6 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.removeItemFromShoppingCart = (e) => {
         const id = e.currentTarget.getAttribute("data-id")
         myCart.removeItem(id)
+        loadShoppingCartEvent()
 
     }
 

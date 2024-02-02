@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cart, CartItem
+from .models import Cart, CartItem, Extra, Tip
 from main.serializers import FoodSerializer
 
 
@@ -20,4 +20,16 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
+        fields = '__all__'
+
+
+class ExtraSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Extra
+        fields = '__all__'
+
+
+class TipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tip
         fields = '__all__'

@@ -1,0 +1,79 @@
+[
+  {
+    "model": "checkout.tip",
+    "pk": 1,
+    "fields": {
+      "name": "Excellent Service",
+      "amount": "10.00",
+      "is_active": true,
+      "create_at": "2024-02-02T12:00:00Z",
+      "update_at": "2024-02-02T12:00:00Z"
+    }
+  },
+  {
+    "model": "checkout.tip",
+    "pk": 2,
+    "fields": {
+      "name": "Good Service",
+      "amount": "5.00",
+      "is_active": true,
+      "create_at": "2024-02-02T12:30:00Z",
+      "update_at": "2024-02-02T12:30:00Z"
+    }
+  },
+  {
+    "model": "checkout.tip",
+    "pk": 3,
+    "fields": {
+      "name": "Cash Tip",
+      "amount": "2.50",
+      "is_active": false,
+      "create_at": "2024-02-02T13:00:00Z",
+      "update_at": "2024-02-02T13:00:00Z"
+    }
+  },
+  {
+    "model": "checkout.tip",
+    "pk": 4,
+    "fields": {
+      "name": "Special Occasion",
+      "amount": "15.00",
+      "is_active": true,
+      "create_at": "2024-02-03T14:00:00Z",
+      "update_at": "2024-02-03T14:00:00Z"
+    }
+  },
+  {
+    "model": "checkout.tip",
+    "pk": 5,
+    "fields": {
+      "name": "Quick Service",
+      "amount": "3.00",
+      "is_active": true,
+      "create_at": "2024-02-03T15:30:00Z",
+      "update_at": "2024-02-03T15:30:00Z"
+    }
+  },
+  {
+    "model": "checkout.tip",
+    "pk": 6,
+    "fields": {
+      "name": "Birthday Tip",
+      "amount": "20.00",
+      "is_active": true,
+      "create_at": "2024-02-04T18:00:00Z",
+      "update_at": "2024-02-04T18:00:00Z"
+    }
+  },
+  {
+    "model": "checkout.tip",
+    "pk": 7,
+    "fields": {
+      "name": "Late Night Service",
+      "amount": "8.00",
+      "is_active": true,
+      "create_at": "2024-02-04T22:00:00Z",
+      "update_at": "2024-02-04T22:00:00Z"
+    }
+  }
+]

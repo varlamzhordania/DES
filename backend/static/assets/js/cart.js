@@ -3,6 +3,7 @@ class ShoppingCart {
     constructor() {
         this.cartQuantity = document.querySelector("#shopping-cart-quantity")
         this.shoppingCartTotal = document.querySelector("#shopping-cart-total")
+        this.subtotalSpan = document.querySelector("#subtotal")
         this.items = [];
         this.loadFromServer()
     }
@@ -34,6 +35,7 @@ class ShoppingCart {
         this.items = this.items.filter(item => item.quantity > 0);
         this.toast(`${name} added to your cart`, 5000, "success")
         this.updateCart();
+        this.updateServer()
     }
 
     removeItem(id) {
@@ -43,8 +45,9 @@ class ShoppingCart {
             const name = this?.items[index]?.name
             this.items.splice(index, 1);
             this.updateCart();
+            this.updateServer()
             this.toast(`${name} deleted from your cart`, 5000, "error")
-            loadShoppingCartEvent()
+
         } else {
             console.error("Item not found for removal.");
         }
@@ -58,6 +61,7 @@ class ShoppingCart {
             this.items = this.items.filter(item => item.quantity > 0);
             this.toast(`${name} removed from your cart`, 5000, "error")
             this.updateCart();
+            this.updateServer()
         } else {
             console.error("Item not found or invalid quantity for updating.");
         }
@@ -71,6 +75,7 @@ class ShoppingCart {
 
             this.items = this.items.filter(item => item.quantity > 0);
             this.updateCart();
+            this.updateServer()
         } else {
             console.error("Item not found or invalid quantity for updating.");
         }
@@ -109,6 +114,12 @@ class ShoppingCart {
             method: "post",
             body: prepData
         })
+        const data = await response.json()
+        if (response.status === 404 && data?.error === "food is not available") {
+            this.removeItem(data?.data?.id)
+            this.toast(`unfortunately ${data.data.name} is not available right now!!!`, 5000, "warning")
+        }
+
     }
 
     async loadFromServer() {
@@ -132,14 +143,13 @@ class ShoppingCart {
             this.items.push(prepItem)
         })
         this.updateCart();
-
     }
 
     updateCart() {
         this.displayCart();
-        this.updateServer()
         this.cartQuantity.textContent = this.getQuantity()
         this.shoppingCartTotal.textContent = '$' + this.calculateTotal().toFixed(2)
+        this.subtotalSpan.textContent = '$' + this.calculateTotal().toFixed(2)
     }
 
     toast(text, duration = 5000, type = "info") {

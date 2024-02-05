@@ -46,4 +46,4 @@ class Seat(models.Model):
         if self.seat_name:
             return self.seat_name
         else:
-            return f"{self.user.get_name()}:{self.id}"
+            return f"{self.user.get_name()}:{self.seat_number}"

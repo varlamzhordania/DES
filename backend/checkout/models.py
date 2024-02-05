@@ -24,7 +24,7 @@ class Extra(models.Model):
         verbose_name_plural = _("Extras")
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - ${self.price}"
 
 
 class Tip(models.Model):
@@ -43,7 +43,7 @@ class Tip(models.Model):
         verbose_name_plural = _("Tips")
 
     def __str__(self):
-        return f"{self.name} - {self.amount}"
+        return f"{self.name} - ${self.amount}"
 
 
 class Cart(models.Model):
@@ -113,6 +113,134 @@ class CartItem(models.Model):
         verbose_name_plural = _("CartItems")
         ordering = ["cart", "-id", "-quantity"]
         unique_together = ("cart", "food")
+
+    def __str__(self):
+        return f"{self.quantity} of {self.food}"
+
+
+class Order(models.Model):
+    class PaymentMethodChoices(models.TextChoices):
+        CASH = "CASH", _("Cash")
+        CREDIT = "CREDIT", _("Credit Card")
+
+    class PaymentStatusChoices(models.TextChoices):
+        PENDING = "PENDING", _("Pending")
+        COMPLETED = "COMPLETED", _("Completed")
+
+    class OrderStatusChoices(models.TextChoices):
+        PENDING = "PENDING", _("Pending")
+        PROCESSING = "PROCESSING", _("Processing")
+        COMPLETED = "COMPLETED", _("Completed")
+
+    user = models.ForeignKey(
+        get_user_model(),
+        verbose_name=_("User"),
+        on_delete=models.PROTECT,
+        related_name="orders",
+        blank=False,
+        null=False,
+        help_text=_("The user who placed the order.")
+    )
+    session_id = models.UUIDField(
+        verbose_name=_("Session ID"),
+        blank=True,
+        null=True,
+        help_text=_("The session id of the order")
+    )
+    session_customer = models.CharField(
+        verbose_name=_("Session Customer"),
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text=_("The session customer of the order")
+    )
+    extras = models.ManyToManyField(
+        Extra,
+        verbose_name=_("Extras"),
+        blank=True,
+        help_text=_("Selected extras for the order.")
+    )
+    tips = models.ForeignKey(
+        Tip,
+        verbose_name=_("Tips"),
+        blank=True,
+        null=True,
+        help_text=_("Selected tips for the order."),
+        on_delete=models.PROTECT
+    )
+    payment_method = models.CharField(
+        max_length=50,
+        verbose_name=_("Payment Method"),
+        choices=PaymentMethodChoices,
+        default=PaymentMethodChoices.CASH
+    )
+    payment_status = models.CharField(
+        max_length=50,
+        verbose_name=_("Payment Status"),
+        choices=PaymentStatusChoices,
+        default=PaymentStatusChoices.PENDING
+    )
+    status = models.CharField(
+        max_length=50,
+        verbose_name=_("Order Status"),
+        choices=OrderStatusChoices,
+        default=OrderStatusChoices.PENDING
+    )
+    description = models.TextField(
+        verbose_name=_("Order Description"),
+        blank=True,
+        null=True,
+        help_text=_("Additional notes or description for the order.")
+    )
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Order Date"))
+    update_at = models.DateTimeField(auto_now=True, verbose_name=_("Last Modified"))
+
+    class Meta:
+        verbose_name = _("Order")
+        verbose_name_plural = _("Orders")
+        ordering = ("-create_at",)
+
+    def __str__(self):
+        return f"Order #{self.id} - {self.user.get_name()}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        verbose_name=_("Order"),
+        related_name="order_items",
+        help_text=_("Order items are ordered by this order. ")
+    )
+    food = models.ForeignKey(
+        Food,
+        verbose_name=_("Food"),
+        on_delete=models.CASCADE,
+        related_name="order_item_food",
+        null=False,
+        blank=False,
+        help_text=_("The food this item belongs to.")
+    )
+    seats = models.ManyToManyField(
+        Seat,
+        verbose_name=_("Seat"),
+        related_name="order_item_seats",
+        blank=False,
+    )
+    quantity = models.PositiveIntegerField(default=1, verbose_name=_("Quantity"), help_text=_("The quantity this item"))
+    price = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        verbose_name=_("Price"),
+        null=True,
+        blank=True,
+        help_text=_("Cost of the food"),
+    )
+
+    class Meta:
+        verbose_name = _("OrderItem")
+        verbose_name_plural = _("OrderItems")
+        ordering = ["order", "-id", "-quantity"]
 
     def __str__(self):
         return f"{self.quantity} of {self.food}"

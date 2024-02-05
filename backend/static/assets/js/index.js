@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 extrasDiv.innerHTML += `
                    <div class="form-check form-check-inline form-check-extra">
-                      <input class="form-check-input extra-checkbox" type="checkbox" id="extra-checkbox-${extra.id}" data-price="${extra.price}" value="${extra.id}">
+                      <input class="form-check-input extra-checkbox" type="checkbox" name="extras" id="extra-checkbox-${extra.id}" data-price="${extra.price}" value="${extra.id}">
                         <label class="form-check-label" for="extra-checkbox-${extra.id}">
                             ${extra.name} 
                             <small class="fw-bold">
@@ -222,8 +222,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     slidesPerView: 3,
                 },
                 1024: {
-                    slidesPerView: 4,
+                    slidesPerView: 3,
                 },
+                1200: {
+                    slidesPerView: 4
+                }
             },
         });
         categoryListContainer.initialize();

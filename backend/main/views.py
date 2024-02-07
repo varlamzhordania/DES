@@ -14,12 +14,21 @@ def home_view(request, *args, **kwargs):
     sessions = request.user.session_set.all().first()
 
     print(sessions.get_decoded())
-    print(Order.objects.filter(session_id=request.session.get('session_id')))
 
     my_context = {
         "Title": "Home",
     }
     return render(request, "main/home.html", my_context)
+
+
+@login_required
+def order_list_view(request, *args, **kwargs):
+    orders = Order.objects.filter(session_id=request.session.get('session_id'))
+    my_context = {
+        "Title": "Order List",
+        "orders": orders
+    }
+    return render(request, "main/order_list.html", my_context)
 
 
 @login_required

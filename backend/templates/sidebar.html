@@ -1,4 +1,5 @@
 {% url 'main:home' as home %}
+{% url 'main:order_list' as order_list %}
 {% url 'main:support' as support %}
 {% url 'main:settings' as user_settings %}
 <aside id="sidebar-aside">
@@ -14,6 +15,13 @@
                        href="{{ home }}">
                         <i class="bi bi-house fs-1"></i>
                         <small class="my-0">Home</small>
+                    </a>
+                </li>
+                <li class="my-3 {% if request.path == order_list %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
+                    <a class="nav-link text-center {% if request.path == order_list %}link-primary {% else %}link-dark{% endif %} "
+                       href="{{ order_list }}">
+                        <i class="bi bi-clipboard fs-1"></i>
+                        <small class="my-0">Orders</small>
                     </a>
                 </li>
                 <li class="my-3 {% if request.path == support %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">

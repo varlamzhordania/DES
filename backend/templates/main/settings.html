@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block content %}
+    <form method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container card bg-white border-0 shadow-sm">
+            <div class="card-body">
+                <section class="row mb-3">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                        <label class="form-label" for="full_name">{{ customer_form.first_name.label }}</label>
+                        {{ customer_form.first_name }}
+                        {{ customer_form.first_name.errors }}
+                    </div>
+                </section>
+                <section>
+                    {{ formset.management_form }}
+                        <div class="row border border-1 p-3 m-3 mx-0 rounded">
+                            {% for form in formset %}
+                                {{ form.id }}
+                                <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                    <label class="form-label"
+                                           for="{{ form.seat_number.name }}">{{ form.seat_number.label }}</label>
+                                    {{ form.seat_number }}
+                                    {{ form.seat_number.errors }}
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-8 col-xl-9 mb-3">
+                                    <label class="form-label"
+                                           for="{{ form.seat_name.name }}">{{ form.seat_name.label }}</label>
+                                    {{ form.seat_name }}
+                                    <small class="text-muted">{{ form.seat_name.help_text }}</small>
+                                    {{ form.seat_name.errors }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                </section>
+                <section>
+                    <button class="btn btn-dark float-end" type="submit" role="button">
+                        SAVE
+                    </button>
+                </section>
+            </div>
+        </div>
+    </form>
+{% endblock %}

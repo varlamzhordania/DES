@@ -1,5 +1,6 @@
 {% url 'main:home' as home %}
 {% url 'main:support' as support %}
+{% url 'main:settings' as user_settings %}
 <aside id="sidebar-aside">
     <div class="sidebar-wrapper shadow">
         <div class="sidebar">
@@ -20,6 +21,13 @@
                        href="{{ support }}">
                         <i class="bi bi-headset fs-1"></i>
                         <small class="my-0">Support</small>
+                    </a>
+                </li>
+                <li class="my-3 {% if request.path == user_settings %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
+                    <a class="nav-link text-center {% if request.path == user_settings %}link-primary {% else %}link-dark{% endif %} "
+                       href="{{ user_settings }}">
+                        <i class="bi bi-gear fs-1"></i>
+                        <small class="my-0">Settings</small>
                     </a>
                 </li>
             </ul>

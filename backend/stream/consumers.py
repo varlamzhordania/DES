@@ -1,17 +1,21 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
+from django.contrib.auth.models import AnonymousUser
 import json
 
 
 class StreamConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # Set the room group name for this consumer
-        self.room_group_name = 'chat_room'
-
+        user = await self.get_user()
+        self.room_group_name = f'chat_room'
         # Add the consumer to the group when connected
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-
-        # Accept the WebSocket connection
         await self.accept()
+        if user.is_anonymous:
+            # Handle authentication failure, for example, close the connection
+            await self.close()
+        else:
+            print(f"Connected: {user}")
 
     async def disconnect(self, close_code):
         # Remove the consumer from the group when disconnected
@@ -44,3 +48,7 @@ class StreamConsumer(AsyncWebsocketConsumer):
         await self.send(
             text_data=json.dumps(dict_data)
         )
+
+    @database_sync_to_async
+    def get_user(self):
+        return self.scope["user"] if self.scope and "user" in self.scope else AnonymousUser()

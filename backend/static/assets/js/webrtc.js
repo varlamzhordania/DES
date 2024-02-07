@@ -64,6 +64,8 @@ class Webrtc {
                 audioTracks[0].enabled = true
                 videoTracks[0].enabled = true
 
+                this.resetToggles()
+
                 this.btnToggleAudio.addEventListener('click', (e) => {
                     audioTracks[0].enabled = !audioTracks[0].enabled
 
@@ -78,6 +80,7 @@ class Webrtc {
                     }
 
                 })
+
                 this.btnToggleVideo.addEventListener('click', (e) => {
                     videoTracks[0].enabled = !videoTracks[0].enabled
 
@@ -100,6 +103,15 @@ class Webrtc {
             .catch((err) => console.log('Error accessing media devices.', err));
     }
 
+    resetToggles() {
+        this.btnToggleAudio.innerHTML = `<i class="bi bi-mic-fill fs-5"></i>`
+        this.btnToggleAudio.classList.remove("bg-danger")
+        this.btnToggleAudio.classList.add("bg-success")
+        this.btnToggleVideo.innerHTML = `<i class="bi bi-camera-video-fill fs-5"></i>`
+        this.btnToggleVideo.classList.remove("bg-danger")
+        this.btnToggleVideo.classList.add("bg-success")
+    }
+
     disconnectCall() {
         if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
             this.websocket.close();
@@ -118,6 +130,10 @@ class Webrtc {
         this.btnCall.classList.remove("visually-hidden");
         this.btnDisconnect.classList.add("visually-hidden");
 
+        this.btnSendMessage.disabled = true
+        this.messageInput.disabled = true
+        this.messageInput.value = 'make call to use chat'
+
         this.initializeMedia();
     }
 
@@ -126,7 +142,9 @@ class Webrtc {
         this.username = username;
         this.btnCall.classList.add("visually-hidden");
         this.btnDisconnect.classList.remove("visually-hidden")
-
+        this.btnSendMessage.disabled = false
+        this.messageInput.disabled = false
+        this.messageInput.value = ''
 
         this.setupWebSocket();
     }
@@ -196,13 +214,7 @@ class Webrtc {
         peer.oniceconnectionstatechange = () => {
             let iceConnectionState = peer.iceConnectionState;
             if (iceConnectionState === 'failed' || iceConnectionState === "disconnected" || iceConnectionState === "closed") {
-                delete this.mapPeers[peerUsername];
-                if (iceConnectionState !== 'closed') {
-                    peer.close();
-                }
-                this.removeVideo(remoteVideo);
-                this.btnCall.classList.remove("visually-hidden");
-                this.btnDisconnect.classList.add("visually-hidden");
+                this.disconnectCall()
             }
         }
 
@@ -237,13 +249,7 @@ class Webrtc {
         peer.oniceconnectionstatechange = () => {
             let iceConnectionState = peer.iceConnectionState;
             if (iceConnectionState === 'failed' || iceConnectionState === "disconnected" || iceConnectionState === "closed") {
-                delete this.mapPeers[peerUsername];
-                if (iceConnectionState !== 'closed') {
-                    peer.close();
-                }
-                this.removeVideo(remoteVideo);
-                this.btnCall.classList.remove("visually-hidden");
-                this.btnDisconnect.classList.add("visually-hidden");
+                this.disconnectCall()
             }
         }
 
@@ -318,7 +324,7 @@ class Webrtc {
         icon.classList.add("bi", "bi-headset", "fs-3")
         icon.style.alignSelf = "end"
         li.classList.add("d-flex", "align-items-center", "justify-content-start", "gap-1", "my-2")
-        span.classList.add("bg-white", "p-2", "rounded", "w-auto", "text-break", "shadow-sm")
+        span.classList.add("bg-white", "text-dark", "p-2", "rounded", "w-auto", "text-break", "shadow-sm")
         span.textContent = message
         li.appendChild(icon);
         li.appendChild(span)
@@ -330,28 +336,45 @@ class Webrtc {
     }
 
     attachEventListeners() {
+        // Add click event listener to the button
         this.btnSendMessage.addEventListener('click', () => {
-            let message = this.messageInput.value;
-            if (message === '') return;
-
-            let li = document.createElement('li');
-            let icon = document.createElement('i');
-            let span = document.createElement('span');
-            icon.classList.add("bi", "bi-person", "fs-3")
-            icon.style.alignSelf = "end"
-            li.classList.add("d-flex", "align-items-center", "justify-content-start", "gap-1", "my-2")
-            span.classList.add("bg-white", "p-2", "rounded", "w-auto", "text-break", "shadow-sm")
-            span.textContent = message
-            li.appendChild(icon);
-            li.appendChild(span)
-            this.messageList.appendChild(li);
-
-            let dataChannels = this.getDataChannels();
-            // message = this.username + ': ' + message;
-
-            dataChannels.forEach((dc) => dc.send(message));
-            this.messageInput.value = '';
+            this.sendMessage();
         });
+
+        // Add keydown event listener to the message input field
+        this.messageInput.addEventListener('keydown', (event) => {
+            // Check if the pressed key is 'Enter' (key code 13)
+            if (event.keyCode === 13 && !event.shiftKey && !event.ctrlKey) {
+                event.preventDefault()
+                this.sendMessage();
+            }
+        });
+    }
+
+    sendMessage() {
+        let message = this.messageInput.value.trim();
+        if (message === '') {
+            // Handle empty message
+            return;
+        }
+
+        let li = document.createElement('li');
+        let icon = document.createElement('i');
+        let span = document.createElement('span');
+        icon.classList.add("bi", "bi-person", "fs-3")
+        icon.style.alignSelf = "end"
+        li.classList.add("d-flex", "align-items-center", "justify-content-start", "gap-1", "my-2")
+        span.classList.add("p-2", "rounded", "w-auto", "text-break")
+        span.textContent = message
+        li.appendChild(icon);
+        li.appendChild(span)
+        this.messageList.appendChild(li);
+
+        let dataChannels = this.getDataChannels();
+        // message = this.username + ': ' + message;
+
+        dataChannels.forEach((dc) => dc.send(message));
+        this.messageInput.value = '';
     }
 }
 

@@ -7,37 +7,40 @@
         <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">
             <div class="card rounded border-2 w-100 overflow-hidden" style="background-color: var(--bs-gray-200)"
                  id="video-container">
-                <div class="position-absolute card overflow-hidden" id="local-video-wrapper"
+                <div class="position-absolute card overflow-hidden border-dark border-2" id="local-video-wrapper"
                      style="top: 10px;right: 10px">
                     <div class="card-body p-0 position-relative z-1">
                         <video id="local-video" autoplay playsinline class="img-fluid object-fit-cover h-100">
                         </video>
                         <div class="d-flex justify-content-between px-2 w-100 align-self-center position-absolute gap-1 z-1"
                              style="bottom: 5px;">
-                            <button class="btn rounded-circle bg-success text-white" id="btn-toggle-audio">
-                                <i class="bi bi-mic-fill fs-5"></i>
-                            </button>
-                            <button class="btn rounded-circle bg-success text-white" id="btn-toggle-video">
-                                <i class="bi bi-camera-video-fill fs-5"></i>
-                            </button>
+
                         </div>
                     </div>
                 </div>
-
-                <button id="btn-join" class="btn btn-lg bg-white text-success shadow-sm position-absolute end-50 z-1 "
-                        style="bottom: 10px">
-                    <i class="bi bi-telephone-outbound-fill"></i>
-                </button>
-                <button id="btn-disconnect" class="btn btn-lg bg-danger text-white visually-hidden shadow-sm position-absolute end-50 z-1 "
-                        style="bottom: 10px">
-                    <i class="bi bi-telephone-inbound-fill"></i>
-                </button>
+                <div class="d-flex justify-content-center align-self-center gap-2 w-100 position-absolute z-1"
+                     style="bottom: 12px">
+                    <button class="btn rounded-circle bg-success text-white shadow-sm" id="btn-toggle-audio">
+                        <i class="bi bi-mic-fill fs-5"></i>
+                    </button>
+                    <button id="btn-join"
+                            class="btn rounded-circle bg-white text-success shadow-sm">
+                        <i class="bi bi-telephone-outbound-fill"></i>
+                    </button>
+                    <button id="btn-disconnect"
+                            class="btn rounded-circle bg-danger text-white visually-hidden shadow-sm">
+                        <i class="bi bi-telephone-inbound-fill"></i>
+                    </button>
+                    <button class="btn rounded-circle bg-success text-white shadow-sm" id="btn-toggle-video">
+                        <i class="bi bi-camera-video-fill fs-5"></i>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
             <div class="card shadow-sm border-2" style="background-color: var(--bs-gray-200)">
                 <div class="card-header bg-transparent border-0">
-                    <h4 class="card-title fw-bold">Chat Support</h4>
+                    <h4 class="card-title fw-bold text-secondary text-uppercase">Chat Support</h4>
                 </div>
                 <div class="card-body">
                     <div id="messages">
@@ -45,11 +48,14 @@
 
                         </ul>
                     </div>
-                    <div class="d-flex gap-1 bg-white py-0 px-2 rounded shadow-sm">
-                        <input id="message-input" type="text" class="form-control bg-transparent border-0 w-100"
-                               multiple/>
-                        <button class="btn btn-secondary bg-secondary-subtle text-secondary border-0 my-2"
-                                id="btn-send-message"><i class="bi bi-send fs-5"></i></button>
+                    <div class="d-flex justify-content-start align-items-center gap-1 bg-white py-0 px-2 rounded shadow-sm">
+                        <textarea id="message-input" rows="1" class="form-control bg-transparent border-0 w-100 lh-sm" disabled
+                                  autofocus style="resize: none">make call to use chat</textarea>
+
+                        <button class="btn btn-secondary bg-secondary-subtle text-secondary border-0 my-2" disabled
+                                id="btn-send-message">
+                            <i class="bi bi-send-fill fs-5"></i>
+                        </button>
                     </div>
                 </div>
             </div>

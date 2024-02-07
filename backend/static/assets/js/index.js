@@ -171,9 +171,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `
         })
+        localStorage.setItem("FOOD_LIST", JSON.stringify(FOOD_LIST))
         btnOrders = document.querySelectorAll('.btn-order')
         addBtnOrderEvent()
     }
+
     if (foodListContainer)
         updateFoodList(categoryParam)
 

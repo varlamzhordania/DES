@@ -1,4 +1,5 @@
 {% url 'main:home' as home %}
+{% url 'main:support' as support %}
 <aside id="sidebar-aside">
     <div class="sidebar-wrapper shadow">
         <div class="sidebar">
@@ -7,20 +8,20 @@
             </div>
             <hr/>
             <ul class="list-unstyled">
-                <li class="my-3 bg-primary-subtle rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
+                <li class="my-3 {% if request.path == home %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
                     <a class="nav-link text-center {% if request.path == home %}link-primary {% else %}link-dark{% endif %} "
                        href="{{ home }}">
                         <i class="bi bi-house fs-1"></i>
                         <small class="my-0">Home</small>
                     </a>
                 </li>
-{#                <li class="my-3 rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">#}
-{#                    <a class="nav-link text-center"#}
-{#                       href="{{ home }}">#}
-{#                        <i class="bi bi-grid fs-1"></i>#}
-{#                        <small class="my-0">Category</small>#}
-{#                    </a>#}
-{#                </li>#}
+                <li class="my-3 {% if request.path == support %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
+                    <a class="nav-link text-center {% if request.path == support %}link-primary {% else %}link-dark{% endif %} "
+                       href="{{ support }}">
+                        <i class="bi bi-headset fs-1"></i>
+                        <small class="my-0">Support</small>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

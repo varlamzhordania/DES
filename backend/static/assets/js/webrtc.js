@@ -1,5 +1,5 @@
 class Webrtc {
-    constructor(localVideoId, videoContainerId, messageListId, messageInputId, btnSendMessageId, btnToggleAudio, btnToggleVideo) {
+    constructor(localVideoId, videoContainerId, messageListId, messageInputId, btnSendMessageId, btnToggleAudio, btnToggleVideo, joinButton, disconnectButton) {
         this.localStream = new MediaStream();
         this.mapPeers = {};
         this.websocket = null;
@@ -42,6 +42,9 @@ class Webrtc {
         this.btnToggleAudio = document.querySelector(btnToggleAudio)
         this.btnToggleVideo = document.querySelector(btnToggleVideo)
 
+        this.btnCall = joinButton
+        this.btnDisconnect = disconnectButton
+
         this.initializeMedia();
         this.attachEventListeners();
     }
@@ -64,38 +67,66 @@ class Webrtc {
                 this.btnToggleAudio.addEventListener('click', (e) => {
                     audioTracks[0].enabled = !audioTracks[0].enabled
 
-                    if (audioTracks[0].enabled)
-                        this.btnToggleAudio.innerHTML = 'Audio Mute'
-                    else
-                        this.btnToggleAudio.innerHTML = 'Audio UnMute'
+                    if (audioTracks[0].enabled) {
+                        this.btnToggleAudio.innerHTML = `<i class="bi bi-mic-fill fs-5"></i>`
+                        this.btnToggleAudio.classList.remove("bg-danger")
+                        this.btnToggleAudio.classList.add("bg-success")
+                    } else {
+                        this.btnToggleAudio.innerHTML = `<i class="bi bi-mic-mute-fill fs-5"></i>`
+                        this.btnToggleAudio.classList.remove("bg-success")
+                        this.btnToggleAudio.classList.add("bg-danger")
+                    }
 
                 })
                 this.btnToggleVideo.addEventListener('click', (e) => {
                     videoTracks[0].enabled = !videoTracks[0].enabled
 
-                    if (videoTracks[0].enabled)
-                        this.btnToggleVideo.innerHTML = 'Video Off'
-                    else
-                        this.btnToggleVideo.innerHTML = 'Video On'
+                    if (videoTracks[0].enabled) {
+                        this.btnToggleVideo.innerHTML = `<i class="bi bi-camera-video-fill fs-5"></i>`
+                        this.btnToggleVideo.classList.remove("bg-danger")
+                        this.btnToggleVideo.classList.add("bg-success")
+                    } else {
+                        this.btnToggleVideo.innerHTML = `<i class="bi bi-camera-video-off-fill fs-5"></i>`
+                        this.btnToggleVideo.classList.remove("bg-success")
+                        this.btnToggleVideo.classList.add("bg-danger")
+                    }
                 })
 
+                this.btnDisconnect.addEventListener("click", () => {
+                    this.disconnectCall()
+                })
 
             })
             .catch((err) => console.log('Error accessing media devices.', err));
     }
 
-    joinChat(username, usernameInput, joinButton, usernameLabel) {
+    disconnectCall() {
+        if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
+            this.websocket.close();
+        }
+
+        Object.keys(this.mapPeers).forEach((key) => {
+            const [peer, dc] = this.mapPeers[key]
+            if (peer && peer.iceConnectionState !== 'closed') {
+                peer.close();
+            }
+            this.removeVideo(this.getVideoElement(key));
+        });
+
+        this.mapPeers = {};
+
+        this.btnCall.classList.remove("visually-hidden");
+        this.btnDisconnect.classList.add("visually-hidden");
+
+        this.initializeMedia();
+    }
+
+    joinChat(username) {
         if (!username) return;
         this.username = username;
+        this.btnCall.classList.add("visually-hidden");
+        this.btnDisconnect.classList.remove("visually-hidden")
 
-        usernameInput.value = '';
-        usernameInput.disabled = true;
-        usernameInput.classList.add("visually-hidden");
-
-        joinButton.disabled = true;
-        joinButton.classList.add("visually-hidden");
-
-        usernameLabel.innerHTML = username;
 
         this.setupWebSocket();
     }
@@ -170,6 +201,8 @@ class Webrtc {
                     peer.close();
                 }
                 this.removeVideo(remoteVideo);
+                this.btnCall.classList.remove("visually-hidden");
+                this.btnDisconnect.classList.add("visually-hidden");
             }
         }
 
@@ -209,6 +242,8 @@ class Webrtc {
                     peer.close();
                 }
                 this.removeVideo(remoteVideo);
+                this.btnCall.classList.remove("visually-hidden");
+                this.btnDisconnect.classList.add("visually-hidden");
             }
         }
 
@@ -251,25 +286,17 @@ class Webrtc {
 
     createVideo(username) {
         if (!document.querySelector(`#${username}-video`)) {
-            let videoElement = document.createElement('video');
+            const videoElement = document.createElement('video');
+            const div = document.createElement('div');
             videoElement.id = username + '-video';
             videoElement.autoplay = true;
             videoElement.playsInline = true;
-            videoElement.classList.add('card-img');
+            videoElement.classList.add('img-fluid', 'h-100', 'w-100', 'd-block', 'object-fit-cover');
+            div.classList.add("w-100", "h-100")
+            div.appendChild(videoElement)
 
-            let cardBody = document.createElement('div');
-            cardBody.classList.add('card-body');
-            cardBody.appendChild(videoElement);
 
-            let card = document.createElement('div');
-            card.classList.add('card');
-            card.appendChild(cardBody);
-
-            let colWrapper = document.createElement('div');
-            colWrapper.classList.add('col');
-            colWrapper.appendChild(card);
-
-            this.videoContainer.appendChild(colWrapper);
+            this.videoContainer.appendChild(div);
 
             return videoElement;
         } else {
@@ -280,13 +307,21 @@ class Webrtc {
 
     removeVideo(video) {
         let videoWrapper = video.parentNode
-        videoWrapper.parentNode.parentNode.parentNode.removeChild(videoWrapper.parentNode.parentNode)
+        videoWrapper.parentNode.removeChild(videoWrapper)
     }
 
     dcOnMessage(e) {
         let message = e.data;
         let li = document.createElement('li');
-        li.appendChild(document.createTextNode(message));
+        let icon = document.createElement('i');
+        let span = document.createElement('span');
+        icon.classList.add("bi", "bi-headset", "fs-3")
+        icon.style.alignSelf = "end"
+        li.classList.add("d-flex", "align-items-center", "justify-content-start", "gap-1", "my-2")
+        span.classList.add("bg-white", "p-2", "rounded", "w-auto", "text-break", "shadow-sm")
+        span.textContent = message
+        li.appendChild(icon);
+        li.appendChild(span)
         this.messageList.appendChild(li);
     }
 
@@ -300,11 +335,19 @@ class Webrtc {
             if (message === '') return;
 
             let li = document.createElement('li');
-            li.appendChild(document.createTextNode('Me: ' + message));
+            let icon = document.createElement('i');
+            let span = document.createElement('span');
+            icon.classList.add("bi", "bi-person", "fs-3")
+            icon.style.alignSelf = "end"
+            li.classList.add("d-flex", "align-items-center", "justify-content-start", "gap-1", "my-2")
+            span.classList.add("bg-white", "p-2", "rounded", "w-auto", "text-break", "shadow-sm")
+            span.textContent = message
+            li.appendChild(icon);
+            li.appendChild(span)
             this.messageList.appendChild(li);
 
             let dataChannels = this.getDataChannels();
-            message = this.username + ': ' + message;
+            // message = this.username + ': ' + message;
 
             dataChannels.forEach((dc) => dc.send(message));
             this.messageInput.value = '';
@@ -314,16 +357,17 @@ class Webrtc {
 
 document.addEventListener("DOMContentLoaded", () => {
     const joinButton = document.querySelector('#btn-join');
+    const disconnectButton = document.querySelector('#btn-disconnect');
     const usernameInput = document.querySelector('#username');
-    const usernameLabel = document.querySelector('#username-label');
 
-    const chatApp = new Webrtc('#local-video', '#video-container', '#message-list', '#message-input', '#btn-send-message', '#btn-toggle-audio', '#btn-toggle-video');
+    const chatApp = new Webrtc('#local-video', '#video-container', '#message-list', '#message-input', '#btn-send-message', '#btn-toggle-audio', '#btn-toggle-video', joinButton, disconnectButton);
 
     joinButton.addEventListener('click', () => {
         const username = usernameInput.value.trim();
         if (username) {
-            chatApp.joinChat(username, usernameInput, joinButton, usernameLabel);
+            chatApp.joinChat(username);
         } else {
+            console.log(username)
             alert("Please enter a username.");
         }
     });

@@ -6,6 +6,23 @@ body {
     font-family: 'Poppins', sans-serif;
     display: flex;
     overflow: hidden;
+    scrollbar-color: var(--bs-primary) #f1f1f1;
+    scrollbar-width: thin;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--bs-primary);
 }
 
 
@@ -188,6 +205,23 @@ body {
     flex-basis: 250px;
 }
 
+#video-container {
+    height: 450px;
+}
+
+#local-video-wrapper {
+    height: auto;
+    width: 35%;
+}
+
+#video-container i {
+    font-size: 14px !important;
+}
+
+#message-list {
+    height: 400px;
+}
+
 @media screen and (max-width: 576px) {
     .sidebar-wrapper {
         position: fixed;
@@ -225,6 +259,22 @@ body {
     .card-food .card-title {
         font-size: 14px;
     }
+
+    #video-container {
+        height: 450px;
+    }
+
+    #local-video-wrapper {
+        height: 150px;
+        width: 143px;
+    }
+
+
+    #video-container i {
+        font-size: 14px !important;
+    }
+
+
 }
 
 @media screen and (min-width: 576px) {
@@ -265,6 +315,24 @@ body {
         font-size: 14px;
     }
 
+    #video-container {
+        height: 450px;
+    }
+
+    #local-video-wrapper {
+        height: 150px;
+        width: 143px;
+    }
+
+
+    #video-container i {
+        font-size: 14px !important;
+    }
+
+    #message-list {
+        height: 400px;
+    }
+
 }
 
 @media screen and (min-width: 768px) {
@@ -286,6 +354,24 @@ body {
 
     .card-food .card-title {
         font-size: 14px;
+    }
+
+    #video-container {
+        height: 450px;
+    }
+
+    #local-video-wrapper {
+        height: 150px;
+        width: 143px;
+    }
+
+
+    #video-container i {
+        font-size: 14px !important;
+    }
+
+    #message-list {
+        height: 280px;
     }
 
 }
@@ -310,6 +396,25 @@ body {
     .card-food .card-title {
         font-size: 18px;
     }
+
+
+    #video-container {
+        height: 500px;
+    }
+
+    #local-video-wrapper {
+        height: 210px;
+        width: 203px;
+    }
+
+
+    #video-container i {
+        font-size: 20px !important;
+    }
+
+    #message-list {
+        height: 500px;
+    }
 }
 
 @media screen and (min-width: 1200px) {
@@ -333,8 +438,43 @@ body {
         font-size: 18px;
     }
 
+
+    #video-container {
+        height: 665px;
+    }
+
+    #local-video-wrapper {
+        height: 210px;
+        width: 203px;
+    }
+
+
+    #video-container i {
+        font-size: 18px !important;
+    }
+
+    #message-list {
+        height: 500px;
+    }
+
 }
 
 @media screen and (min-width: 1400px) {
+    #video-container {
+        height: 900px;
+    }
 
+    #local-video-wrapper {
+        height: 250px;
+        width: 243px;
+    }
+
+
+    #video-container i {
+        font-size: 22px !important;
+    }
+
+    #message-list {
+        height: 737px;
+    }
 }

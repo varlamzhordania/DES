@@ -105,7 +105,7 @@ class ShoppingCart {
         const csrftoken = Cookies.get('csrftoken');
 
         const prepData = JSON.stringify(this.items)
-        const response = await fetch(`api/cart/`, {
+        const response = await fetch(`/api/cart/`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -123,7 +123,7 @@ class ShoppingCart {
     }
 
     async loadFromServer() {
-        const response = await fetch(`api/cart/`, {
+        const response = await fetch(`/api/cart/`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",

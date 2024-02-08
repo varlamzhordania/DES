@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from .decorators import unauthenticated_user
 from core.utils import fancy_message
+from .utils import set_new_session
 import logging
-import uuid
 
 
 # Create your views here.
@@ -22,8 +22,7 @@ def login_view(request, *args, **kwargs):
                 if user is not None:
                     login(request, user)
                     if next_url and next_url != "None":
-                        request.session["session_id"] = str(uuid.uuid4())
-                        request.session["customer"] = username
+                        set_new_session(request)
                         fancy_message(request, f"Welcome back {user.username}", "success")
                         return redirect(next_url)
                     else:

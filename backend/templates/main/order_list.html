@@ -1,4 +1,71 @@
 {% extends 'index.html' %}
 {% block content %}
-	order list
+    <section class="card border-0 shadow-sm bg-white">
+        <div class="card-body table-responsive">
+            <table class="table table-hover" id="order-table">
+                <thead>
+                <tr class="table-dark">
+                    <th scope="row">ID</th>
+                    <th scope="row">Table</th>
+                    <th scope="row">Status</th>
+                    <th scope="row">Amount</th>
+                    <th scope="row">Method</th>
+                    <th scope="row">Payment</th>
+                    <th scope="row">Date</th>
+                    <th scope="row">Action</th>
+                </tr>
+                </thead>
+                <tbody id="order-table-body">
+                <tr>
+                    <td colspan="12">
+                        {% include 'loader.html' %}
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const orderTableBody = document.getElementById('order-table-body');
+
+            function renderTable(data) {
+                orderTableBody.innerHTML = '';
+
+                data.results.forEach(order => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <th>#${order.id}</th>
+                    <td>${order.session_customer}</td>
+                    <td><span class="badge bg-primary">${order.status}</span></td>
+                    <td>$${parseFloat(order.total_price).toFixed(2)}</td>
+                    <td><span class="badge bg-info">${order.payment_method}</span></td>
+                    <td><span class="badge bg-secondary">${order.payment_status}</span></td>
+                    <td style="text-wrap: nowrap;">${new Intl.DateTimeFormat('en', {
+                        dateStyle: 'long',
+                        timeStyle: 'short',
+                    }).format(new Date(order.create_at))}</td>
+                    <td><!-- Add action buttons if needed --></td>
+                `;
+                    orderTableBody.appendChild(row);
+                });
+            }
+
+            function fetchOrders(url) {
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        renderTable(data);
+                    })
+                    .catch(error => console.error('Error fetching order data:', error));
+            }
+
+            fetchOrders('/api/order-list/');
+        });
+    </script>
+
 {% endblock %}

@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,168 +33,192 @@
 {% block outer_content %}
     {% include 'sidebar.html' %}
     <main class="main">
-        <header class="d-flex justify-content-between align-items-center">
-            <div class="d-flex justify-content-start align-self-center gap-2">
-                <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
-                    <i class="bi bi-list text-light fs-5"></i>
-                </button>
-                <span class="badge bg-secondary fs-5 lh-base">Table: {{ request.user.get_name }}</span>
-            </div>
-            <button class="btn btn-primary text-primary border-0 fs-4 bg-primary-subtle position-relative"
-                    id="shopping-cart-btn">
+        {% if request.user|has_group:"Table" %}
+            <header class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-start align-self-center gap-2">
+                    <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
+                        <i class="bi bi-list text-light fs-5"></i>
+                    </button>
+                    <span class="badge bg-secondary fs-5 lh-base">Table: {{ request.user.get_name }}</span>
+                </div>
+                <button class="btn btn-primary text-primary border-0 fs-4 bg-primary-subtle position-relative"
+                        id="shopping-cart-btn">
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle border border-3 border-light bg-danger"
                       style="font-size: 12px!important;" id="shopping-cart-quantity">
                 0
                 </span>
-                <i class="bi bi-cart "></i>
-            </button>
-        </header>
-        <!-- Shopping Cart Offcanvas -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="shopping-cart-canvas">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold fs-3" id="shopping-cart-canvas-label">Cart</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body" id="shoppingCartBody">
+                    <i class="bi bi-cart "></i>
+                </button>
+            </header>
+            <!-- Shopping Cart Offcanvas -->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="shopping-cart-canvas">
+                <div class="offcanvas-header border-bottom">
+                    <h5 class="offcanvas-title fw-bold fs-3" id="shopping-cart-canvas-label">Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body" id="shoppingCartBody">
 
-            </div>
-            <div class="offcanvas-footer px-3 py-4 border border-top">
-                <div class="">
-                    <h4 class="fw-bold">Total: <span class="fw-normal" id="shopping-cart-total">$0</span></h4>
-                    <button class="w-100 btn btn-primary text-white my-4 btn-lg text-uppercase fw-bold"
-                            id="btn-checkout">
-                        Checkout
-                    </button>
+                </div>
+                <div class="offcanvas-footer px-3 py-4 border border-top">
+                    <div class="">
+                        <h4 class="fw-bold">Total: <span class="fw-normal" id="shopping-cart-total">$0</span></h4>
+                        <button class="w-100 btn btn-primary text-white my-4 btn-lg text-uppercase fw-bold"
+                                id="btn-checkout">
+                            Checkout
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Order Modal -->
-        <div class="modal fade " id="modal-order" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen-lg-down modal-xl ">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <input type="hidden" name="food-id" id="food-id" value="">
-                        <div id="modal-order-content">
-                            {% include 'loader.html' %}
+            <!-- Order Modal -->
+            <div class="modal fade " id="modal-order" tabindex="-1" aria-labelledby="orderModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-fullscreen-lg-down modal-xl ">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <input type="hidden" name="food-id" id="food-id" value="">
+                            <div id="modal-order-content">
+                                {% include 'loader.html' %}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Checkout Modal -->
-        <div class="modal fade " id="modal-checkout" tabindex="-1" aria-labelledby="checkoutModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="card-title fw-bold">Finalize your order</h3>
-                        <button class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body container">
-                        <form method="post" enctype="multipart/form-data" action="{% url 'checkout:checkout' %}">
-                            {% csrf_token %}
-                            <div class="row gap-4 gap-xl-0">
-                                <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-9">
-                                    <div class="vstack gap-3">
-                                        <div class="card bg-white border-0 shadow-sm">
-                                            <div class="card-body">
-                                                <label class="form-label" for="description">Description</label>
-                                                <textarea class="form-control" name="description" id="description"
-                                                          rows="4"
-                                                          placeholder="Enter your description"></textarea>
+            <!-- Checkout Modal -->
+            <div class="modal fade " id="modal-checkout" tabindex="-1" aria-labelledby="checkoutModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="card-title fw-bold">Finalize your order</h3>
+                            <button class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body container">
+                            <form method="post" enctype="multipart/form-data" action="{% url 'checkout:checkout' %}">
+                                {% csrf_token %}
+                                <div class="row gap-4 gap-xl-0">
+                                    <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-9">
+                                        <div class="vstack gap-3">
+                                            <div class="card bg-white border-0 shadow-sm">
+                                                <div class="card-body">
+                                                    <label class="form-label" for="description">Description</label>
+                                                    <textarea class="form-control" name="description" id="description"
+                                                              rows="4"
+                                                              placeholder="Enter your description"></textarea>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="card bg-white border-0 shadow-sm">
-                                            <div class="card-header bg-transparent border-0">
-                                                <h4 class="card-title mb-0">Extras</h4>
+                                            <div class="card bg-white border-0 shadow-sm">
+                                                <div class="card-header bg-transparent border-0">
+                                                    <h4 class="card-title mb-0">Extras</h4>
+                                                </div>
+                                                <div class="card-body d-flex flex-wrap justify-content-start align-self-start"
+                                                     id="extras"
+                                                >
+                                                    {% include 'loader.html' %}
+                                                </div>
                                             </div>
-                                            <div class="card-body d-flex flex-wrap justify-content-start align-self-start"
-                                                 id="extras"
-                                            >
-                                                {% include 'loader.html' %}
-                                            </div>
-                                        </div>
-                                        <div class="card bg-white border-0 shadow-sm">
-                                            <div class="card-header bg-transparent border-0">
-                                                <h4 class="card-title mb-0">Tips</h4>
-                                            </div>
-                                            <div class="card-body d-flex flex-wrap justify-content-start align-self-start gap-2"
-                                                 id="tips">
-                                                {% include 'loader.html' %}
+                                            <div class="card bg-white border-0 shadow-sm">
+                                                <div class="card-header bg-transparent border-0">
+                                                    <h4 class="card-title mb-0">Tips</h4>
+                                                </div>
+                                                <div class="card-body d-flex flex-wrap justify-content-start align-self-start gap-2"
+                                                     id="tips">
+                                                    {% include 'loader.html' %}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-3">
-                                    <div class="card bg-white shadow-sm border-0">
-                                        <div class="card-body">
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item bg-transparent d-flex justify-content-between align-self-center w-100">
+                                    <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-3">
+                                        <div class="card bg-white shadow-sm border-0">
+                                            <div class="card-body">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item bg-transparent d-flex justify-content-between align-self-center w-100">
                                             <span>
                                                 Subtotal
                                             </span>
-                                                    <span id="subtotal">
+                                                        <span id="subtotal">
                                                 $0.00
                                             </span>
-                                                </li>
-                                                <li class="list-group-item bg-transparent d-flex justify-content-between align-self-center w-100">
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex justify-content-between align-self-center w-100">
                                             <span>
                                                 Extras
                                             </span>
-                                                    <span id="extras-amount">
+                                                        <span id="extras-amount">
                                                 $0.00
                                             </span>
-                                                </li>
-                                                <li class="list-group-item bg-transparent d-flex justify-content-between align-self-center w-100">
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex justify-content-between align-self-center w-100">
                                             <span>
                                                 Tip
                                             </span>
-                                                    <span id="tip-amount">
+                                                        <span id="tip-amount">
                                                 $0.00
                                             </span>
-                                                </li>
-                                                <li class="list-group-item bg-transparent d-flex justify-content-between align-self-center w-100">
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex justify-content-between align-self-center w-100">
                                             <span>
                                                 Total
                                             </span>
-                                                    <span id="total-amount">
+                                                        <span id="total-amount">
                                                 $0.00
                                             </span>
-                                                </li>
-                                            </ul>
-                                            <hr>
-                                            <div class="hstack gap-2 justify-content-start mt-2">
-                                                <div>
-                                                    <input type="radio" class="btn-check payment-radio" name="payment"
-                                                           id="express"
-                                                           autocomplete="off" value="express">
-                                                    <label class="btn btn-outline-dark" for="express">
-                                                        <i class="bi bi-credit-card-2-front mx-2"></i>
-                                                        Credit Card
-                                                    </label>
-                                                </div>
-                                                <div>
-                                                    <input type="radio" class="btn-check payment-radio" name="payment"
-                                                           id="cash" checked
-                                                           autocomplete="off" value="cash">
-                                                    <label class="btn btn-outline-dark" for="cash">
-                                                        <i class="bi bi-cash-coin mx-2"></i>
-                                                        Cash
-                                                    </label>
+                                                    </li>
+                                                </ul>
+                                                <hr>
+                                                <div class="hstack gap-2 justify-content-start mt-2">
+                                                    <div>
+                                                        <input type="radio" class="btn-check payment-radio"
+                                                               name="payment"
+                                                               id="express"
+                                                               autocomplete="off" value="express">
+                                                        <label class="btn btn-outline-dark" for="express">
+                                                            <i class="bi bi-credit-card-2-front mx-2"></i>
+                                                            Credit Card
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <input type="radio" class="btn-check payment-radio"
+                                                               name="payment"
+                                                               id="cash" checked
+                                                               autocomplete="off" value="cash">
+                                                        <label class="btn btn-outline-dark" for="cash">
+                                                            <i class="bi bi-cash-coin mx-2"></i>
+                                                            Cash
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="card-footer border-0 bg-transparent">
-                                            <button class="btn btn-primary text-white w-100">SUBMIT</button>
+                                            <div class="card-footer border-0 bg-transparent">
+                                                <button class="btn btn-primary text-white w-100">SUBMIT</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        {% elif request.user|has_group:"Manager" %}
+            <header class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-start align-self-center gap-2">
+                    <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
+                        <i class="bi bi-list text-light fs-5"></i>
+                    </button>
+                    <span class="badge bg-secondary fs-5 lh-base">User: {{ request.user.get_name }}</span>
+                </div>
+                <button class="btn btn-primary text-primary border-0 fs-4 bg-primary-subtle position-relative"
+                        id="shopping-cart-btn">
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle border border-3 border-light bg-danger"
+                      style="font-size: 12px!important;" id="shopping-cart-quantity">
+                0
+                </span>
+                    <i class="bi bi-cart "></i>
+                </button>
+            </header>
+        {% endif %}
+
         {% block content %}
 
         {% endblock %}
@@ -203,7 +228,12 @@
 <script src="{% static 'assets/lib/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/lib/toastify/toastify.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/lib/cookie/cookie.js' %}" type="text/javascript"></script>
-<script src="{% static 'assets/js/index.js' %}" type="module"></script>
+{% if request.user|has_group:"Table" %}
+    <script src="{% static 'assets/js/index.js' %}" type="module"></script>
+{% elif request.user|has_group:"Manager" %}
+    <script src="{% static 'assets/js/dashboard.js' %}" type="module"></script>
+{% endif %}
+
 {% block script %}
 
 {% endblock %}

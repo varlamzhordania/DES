@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Category, Food
-from checkout.models import Order
 from .forms import CustomerForm, SeatFormSet
+from checkout.models import Order
 from account.models import Seat
 from core.utils import fancy_message
+from account.utils import get_current_session, is_table_user
 
 
 # Create your views here.
 
 @login_required
+@user_passes_test(is_table_user, login_url="crm:dashboard")
 def home_view(request, *args, **kwargs):
     sessions = request.user.session_set.all().first()
 
@@ -22,16 +24,16 @@ def home_view(request, *args, **kwargs):
 
 
 @login_required
+@user_passes_test(is_table_user, login_url="crm:dashboard")
 def order_list_view(request, *args, **kwargs):
-    orders = Order.objects.filter(session_id=request.session.get('session_id'))
     my_context = {
         "Title": "Order List",
-        "orders": orders
     }
     return render(request, "main/order_list.html", my_context)
 
 
 @login_required
+@user_passes_test(is_table_user, login_url="crm:dashboard")
 def support_view(request, *args, **kwargs):
     my_context = {
         "Title": "Support"
@@ -40,6 +42,7 @@ def support_view(request, *args, **kwargs):
 
 
 @login_required
+@user_passes_test(is_table_user, login_url="crm:dashboard")
 def settings_view(request, *args, **kwargs):
     customer_form = CustomerForm(instance=request.user)
     seat_form_set = SeatFormSet(queryset=Seat.objects.filter(user=request.user))

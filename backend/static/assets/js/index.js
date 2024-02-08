@@ -420,7 +420,8 @@ document.addEventListener("DOMContentLoaded", () => {
         loadShoppingCartEvent()
 
     }
-
+    
+    if (shoppingCartBtn)
     shoppingCartBtn.addEventListener("click", loadShoppingCartEvent)
 
 

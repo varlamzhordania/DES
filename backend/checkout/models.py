@@ -3,6 +3,7 @@ from main.models import Food
 from django.contrib.auth import get_user_model
 from account.models import Seat
 from django.utils.translation import gettext_lazy as _
+from decimal import Decimal
 
 
 # Create your models here.
@@ -202,6 +203,16 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} - {self.user.get_name()}"
+
+    from decimal import Decimal
+
+    def get_total_price(self):
+        tip_amount = Decimal(self.tips.amount) if self.tips else Decimal('0')
+        extras_price = sum(Decimal(extra.price) for extra in self.extras.all())
+        items_price = sum(Decimal(item.price) for item in self.order_items.all())
+
+        total_price = tip_amount + extras_price + items_price
+        return total_price
 
 
 class OrderItem(models.Model):

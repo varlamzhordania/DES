@@ -16,13 +16,13 @@
                         <div class="row border border-1 p-3 m-3 mx-0 rounded">
                             {% for form in formset %}
                                 {{ form.id }}
-                                <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="col-12 col-md-5 col-lg-4 col-xl-3">
                                     <label class="form-label"
                                            for="{{ form.seat_number.name }}">{{ form.seat_number.label }}</label>
                                     {{ form.seat_number }}
                                     {{ form.seat_number.errors }}
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-8 col-xl-9 mb-3">
+                                <div class="col-12 col-md-7 col-lg-8 col-xl-9 mb-3">
                                     <label class="form-label"
                                            for="{{ form.seat_name.name }}">{{ form.seat_name.label }}</label>
                                     {{ form.seat_name }}

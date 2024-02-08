@@ -64,7 +64,21 @@ body {
 }
 
 .sidebar li {
+    position: relative;
+    display: flex;
+    align-items: center;
     transition: 0.15s linear;
+    padding: 0 0.5rem;
+}
+
+.sidebar li .nav-link {
+    position: relative;
+    width: 100%;
+    font-size: 12px;
+    font-weight: bold;
+}
+.sidebar li .nav-link small{
+    height: fit-content;
 }
 
 .sidebar li:hover, .sidebar li:focus, .sidebar li:active {

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'settings.apps.SettingsConfig',
     'checkout.apps.CheckoutConfig',
+    'crm.apps.CrmConfig',
     # External Applications
     'rest_framework',
     "corsheaders",
@@ -140,7 +141,7 @@ LOGIN_URL = 'account:login'
 AUTH_USER_MODEL = "account.User"
 
 SESSION_ENGINE = 'user_sessions.backends.db'
-SILENCED_SYSTEM_CHECKS = ['admin.E410']
+SILENCED_SYSTEM_CHECKS = ['admin.E410', 'rest_framework.W001']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -149,5 +150,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'PAGE_SIZE': 100
 }

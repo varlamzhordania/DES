@@ -1,7 +1,9 @@
+{% load custom_filters %}
 {% url 'main:home' as home %}
 {% url 'main:order_list' as order_list %}
 {% url 'main:support' as support %}
 {% url 'main:settings' as user_settings %}
+{% url 'crm:dashboard' as dashboard %}
 <aside id="sidebar-aside">
     <div class="sidebar-wrapper shadow">
         <div class="sidebar">
@@ -10,36 +12,45 @@
             </div>
             <hr/>
             <ul class="list-unstyled">
-                <li class="my-3 {% if request.path == home %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
-                    <a class="nav-link text-center {% if request.path == home %}link-primary {% else %}link-dark{% endif %} "
-                       href="{{ home }}">
-                        <i class="bi bi-house fs-1"></i>
-                        <small class="my-0">Home</small>
-                    </a>
-                </li>
-                <li class="my-3 {% if request.path == order_list %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
-                    <a class="nav-link text-center {% if request.path == order_list %}link-primary {% else %}link-dark{% endif %} "
-                       href="{{ order_list }}">
-                        <i class="bi bi-clipboard fs-1"></i>
-                        <small class="my-0">Orders</small>
-                    </a>
-                </li>
-                <li class="my-3 {% if request.path == support %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
-                    <a class="nav-link text-center {% if request.path == support %}link-primary {% else %}link-dark{% endif %} "
-                       href="{{ support }}">
-                        <i class="bi bi-headset fs-1"></i>
-                        <small class="my-0">Support</small>
-                    </a>
-                </li>
-                <li class="my-3 {% if request.path == user_settings %}bg-primary-subtle{% endif %} rounded pb-2 nav-item d-flex flex-column justify-content-center align-items-center">
-                    <a class="nav-link text-center {% if request.path == user_settings %}link-primary {% else %}link-dark{% endif %} "
-                       href="{{ user_settings }}">
-                        <i class="bi bi-gear fs-1"></i>
-                        <small class="my-0">Settings</small>
-                    </a>
-                </li>
+                {% if request.user|has_group:'Table' %}
+                    <li class="my-3 {% if request.path == home %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == home %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ home }}">
+                            <i class="bi bi-house fs-1"></i>
+                            <small class="my-0">Home</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == order_list %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == order_list %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ order_list }}">
+                            <i class="bi bi-clipboard fs-1"></i>
+                            <small class="my-0">Orders</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == support %}bg-primary-subtle{% endif %} rounded  nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == support %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ support }}">
+                            <i class="bi bi-headset fs-1"></i>
+                            <small class="my-0">Support</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == user_settings %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == user_settings %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ user_settings }}">
+                            <i class="bi bi-gear fs-1"></i>
+                            <small class="my-0">Settings</small>
+                        </a>
+                    </li>
+                {% elif request.user|has_group:'Manager' %}
+                    <li class="my-3 {% if request.path == dashboard %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == dashboard %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ dashboard }}">
+                            <i class="bi bi-app fs-1"></i>
+                            <small class="my-0 text-truncate">Dashboard</small>
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
-
 </aside>

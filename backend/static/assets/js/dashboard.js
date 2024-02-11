@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const toasts = document.getElementsByClassName('toast')
     const sidebarWrapper = document.querySelector(".sidebar-wrapper")

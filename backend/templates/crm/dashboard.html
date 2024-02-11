@@ -1,4 +1,9 @@
 {% extends 'index.html' %}
+{% load static %}
 {% block content %}
     dashboard
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'assets/js/adminSocket.js' %}" type="module"></script>
 {% endblock %}

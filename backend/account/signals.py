@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 @receiver(post_save, sender=get_user_model())
 def assign_group_on_user_creation(sender, instance, created, **kwargs):
     if created:
-        if instance.is_superuser:
+        if instance.is_superuser or instance.is_staff:
             manager_group, created = Group.objects.get_or_create(name='Manager')
             instance.groups.add(manager_group)
         else:

@@ -206,16 +206,8 @@
                     <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
                         <i class="bi bi-list text-light fs-5"></i>
                     </button>
-                    <span class="badge bg-secondary fs-5 lh-base">User: {{ request.user.get_name }}</span>
+                    <span class="badge bg-secondary fs-5 lh-base">{{ request.user.get_name }}</span>
                 </div>
-                <button class="btn btn-primary text-primary border-0 fs-4 bg-primary-subtle position-relative"
-                        id="shopping-cart-btn">
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle border border-3 border-light bg-danger"
-                      style="font-size: 12px!important;" id="shopping-cart-quantity">
-                0
-                </span>
-                    <i class="bi bi-cart "></i>
-                </button>
             </header>
         {% endif %}
 
@@ -233,7 +225,6 @@
 {% elif request.user|has_group:"Manager" %}
     <script src="{% static 'assets/js/dashboard.js' %}" type="module"></script>
 {% endif %}
-
 {% block script %}
 
 {% endblock %}

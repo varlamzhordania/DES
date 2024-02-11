@@ -26,6 +26,7 @@
             </table>
         </div>
     </section>
+    
 {% endblock %}
 
 {% block script %}
@@ -45,7 +46,7 @@
                     <td>$${parseFloat(order.total_price).toFixed(2)}</td>
                     <td><span class="badge bg-info">${order.payment_method}</span></td>
                     <td><span class="badge bg-secondary">${order.payment_status}</span></td>
-                    <td style="text-wrap: nowrap;">${new Intl.DateTimeFormat('en', {
+                    <td style="text-wrap: nowrap;">${new Intl.DateTimeFormat('en' ,{
                         dateStyle: 'long',
                         timeStyle: 'short',
                     }).format(new Date(order.create_at))}</td>

@@ -6,29 +6,32 @@ from django.dispatch import receiver
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib.auth import get_user_model
-from .serializers import UserSerializer, OrderSerializer
+from .serializers import SafeUserSerializer, OrderSerializer, UserRoomSerializer
 from rest_framework.renderers import JSONRenderer
 from checkout.models import Order
+from .models import UserRoom
 import json
 
 
 class StreamConsumer(AsyncWebsocketConsumer):
+    user_room = None
+    room_group_name = None
+    user = None
+
     async def connect(self):
-        user = await self.get_user()
-        self.room_group_name = f'chat_room'
-        # Add the consumer to the group when connected
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.accept()
-        if user.is_anonymous:
-            # Handle authentication failure, for example, close the connection
+        self.user = await self.get_user()
+        if self.user.is_anonymous:
             await self.close()
-        else:
-            print(f"Connected: {user}")
+
+        self.user_room, created = await self.get_or_create_user_room(self.user)
+        self.room_group_name = f'chat_room_{self.user_room.id}'
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        await self.update_room_status(self.user_room, True)
+        await self.accept()
 
     async def disconnect(self, close_code):
-        # Remove the consumer from the group when disconnected
+        await self.update_room_status(self.user_room, False)
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-        print("disconnected")
 
     async def receive(self, text_data=None, bytes_data=None):
         # Parse received JSON data
@@ -61,18 +64,27 @@ class StreamConsumer(AsyncWebsocketConsumer):
     def get_user(self):
         return self.scope["user"] if self.scope and "user" in self.scope else AnonymousUser()
 
+    @database_sync_to_async
+    def update_room_status(self, room, value):
+        room.is_active = value
+        room.save()
+        return True
+
+    @database_sync_to_async
+    def get_or_create_user_room(self, user):
+        return UserRoom.objects.get_or_create(user=user)
+
 
 class AdminConsumer(AsyncWebsocketConsumer):
     user = AnonymousUser()
-    admin_room = None
+    admin_room = 'admin_room'
 
     async def connect(self):
         """
          Connects the WebSocket for admin users, adding them to a group.
         """
-        if self.has_permission:
+        if await self.has_permission():
             self.user = self.scope['user']
-            self.admin_room = f'admin_room'
             await self.channel_layer.group_add(self.admin_room, self.channel_name)
             await self.accept()
         else:
@@ -95,13 +107,23 @@ class AdminConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(self.admin_room, {'type': 'send.user_list', 'dict_data': {}})
         if action == 'order_list':
             await self.channel_layer.group_send(self.admin_room, {'type': 'send.order_list', 'dict_data': {}})
+        if action == 'room_list':
+            await self.channel_layer.group_send(self.admin_room, {'type': 'send.room_list', 'dict_data': {}})
         pass
+
+    async def send_room_list(self, event):
+        rooms = await self.get_rooms()
+        message = {
+            'action': 'room_list',
+            'results': rooms,
+        }
+        await self.send(text_data=json.dumps(message))
 
     async def send_user_list(self, event):
         users = await self.get_users()
         message = {
             'action': 'user_list',
-            'users': users,
+            'results': users,
         }
         await self.send(text_data=json.dumps(message))
 
@@ -109,28 +131,33 @@ class AdminConsumer(AsyncWebsocketConsumer):
         orders = await self.get_orders()
         message = {
             "action": "order_list",
-            "orders": orders,
+            "results": orders,
         }
         await self.send(text_data=json.dumps(message))
+
+    @database_sync_to_async
+    def get_rooms(self):
+        rooms = UserRoom.objects.filter(is_active=True)
+        return self.get_serializer_data_to_dict(UserRoomSerializer(rooms, many=True))
 
     @database_sync_to_async
     def get_orders(self):
         orders = Order.objects.filter(
             status__in=[Order.OrderStatusChoices.PENDING, Order.OrderStatusChoices.PROCESSING]
-        )
+        )[:15]
         return self.get_serializer_data_to_dict(OrderSerializer(orders, many=True))
 
     @database_sync_to_async
     def get_users(self):
         users = get_user_model().objects.all().exclude(id=self.user.id)
-        return self.get_serializer_data_to_dict(UserSerializer(users, many=True))
-
-    def get_serializer_data_to_dict(self, serializer):
-        serialized_data = JSONRenderer().render(serializer.data)
-        return json.loads(serialized_data.decode())
+        return self.get_serializer_data_to_dict(SafeUserSerializer(users, many=True))
 
     @database_sync_to_async
     def has_permission(self):
         return self.scope['user'].is_staff or self.scope['user'].is_superuser or self.scope['user'].groups.filter(
             name="Manager"
         ).exists()
+
+    def get_serializer_data_to_dict(self, serializer):
+        serialized_data = JSONRenderer().render(serializer.data)
+        return json.loads(serialized_data.decode())

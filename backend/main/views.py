@@ -15,7 +15,7 @@ from account.utils import get_current_session, is_table_user
 def home_view(request, *args, **kwargs):
     sessions = request.user.session_set.all().first()
 
-    print(sessions.get_decoded())
+    # print(sessions.get_decoded())
 
     my_context = {
         "Title": "Home",

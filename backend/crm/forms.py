@@ -41,12 +41,27 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = "__all__"
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "example : Sea food"}),
+            "description": forms.Textarea(attrs={"class": "form-control"}),
+            "image":forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "is_active":  forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
 
 
 class FoodForm(forms.ModelForm):
     class Meta:
         model = Food
-        fields = '__all__'
+        fields = ["name", "description", "category", "thumbnail", "price", "ingredients", "is_active"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "example : burger"}),
+            "description": forms.Textarea(attrs={"class": "form-control"}),
+            "category": forms.Select(attrs={"class": "form-select"}),
+            "thumbnail": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "price": forms.NumberInput(attrs={"class": "form-control"}),
+            "ingredients": forms.Textarea(attrs={"class": "form-control"}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
 
 
 class UserForm(forms.ModelForm):
@@ -58,6 +73,7 @@ class UserForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': "form-control", 'readonly': "true", })
     )
     first_name = forms.CharField(
+        required=False,
         max_length=50,
         label=_("Alias Name"),
         widget=forms.TextInput(attrs={'class': "form-control", "placeholder": _("Alias Name")})
@@ -77,24 +93,20 @@ class UserForm(forms.ModelForm):
 
 
 class SeatForm(forms.ModelForm):
-    # id = forms.IntegerField(widget=forms.HiddenInput())
-    seat_number = forms.IntegerField(
-        required=False,
-        label=_("Seat Number"),
-        min_value=0,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
-    seat_name = forms.CharField(
-        max_length=50,
-        required=False,
-        label=_("Seat Name"),
-        help_text=_("name of the person who seat on that chair"),
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
-
     class Meta:
         model = Seat
         fields = ["seat_number", "seat_name"]
+        widgets = {
+            "seat_number": forms.NumberInput(attrs={'class': "form-control", "placeholder": "example 1,2...etc"}),
+            "seat_name": forms.NumberInput(attrs={'class': "form-control", "placeholder": "example john doe"}),
+        }
 
 
-SeatFormSet = forms.modelformset_factory(Seat, form=SeatForm, extra=3)
+SeatFormSet = forms.inlineformset_factory(
+    get_user_model(),
+    Seat,
+    form=SeatForm,
+    extra=0,
+    can_delete=True,
+    can_delete_extra=False
+)

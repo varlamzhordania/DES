@@ -4,12 +4,93 @@
         {% csrf_token %}
         <div class="card bg-white shadow-sm border-0">
             <div class="card-body">
-                {{ form }}
-                {{ formset }}
+                <div class="row row-gap-3">
+                    {% for item in form %}
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="{{ item.name }}">{{ item.label }}</label>
+                                {{ item }}
+                                <small class="text-black-50">{{ item.help_text }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <hr/>
+                <table class="table " id="formset-container">
+                    {{ formset.management_form }}
+                    <thead >
+                    <tr class="table-dark">
+                        <th scope="row">Number</th>
+                        <th scope="row">Alias Name</th>
+                        <th scope="row">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in formset %}
+                        <tr>
+                            {{ item.id }}
+                            <td>
+                                {{ item.seat_number }}
+                                <small class="text-black-50">{{ item.seat_number.help_text }}</small>
+                            </td>
+                            <td>
+                                {{ item.seat_name }}
+                                <small class="text-black-50">{{ item.seat_name.help_text }}</small>
+                            </td>
+                            <td>{{ item.DELETE }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr class="table-transparent">
+                        <td colspan="12">
+                            <button type="button" class="btn btn-sm btn-dark text-white border-0 outline-0"
+                                    id="add-form"><i class="bi bi-plus-circle fs-5"></i> Add more seat
+                            </button>
+                        </td>
+                    </tr>
+                    </tfoot>
+
+                </table>
+
             </div>
-            <div class="card-footer">
-                <button class="btn btn-dark" role="button" type="submit">Save</button>
+            <div class="card-footer bg-transparent border-0">
+                <button class="btn btn-primary text-white float-end" role="button" type="submit">Save changes</button>
             </div>
         </div>
     </form>
+{% endblock %}
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('add-form').addEventListener('click', function () {
+
+                let formCount = parseInt(document.getElementById('id_user_seat-TOTAL_FORMS').value);
+                const table = document.querySelector("#formset-container")
+                const length = table.querySelectorAll("tbody tr").length
+                const row = table.insertRow(length + 1)
+                row.innerHTML = `
+                        <tr>
+                            <input type="hidden" name="user_seat-${length}-id" id="id_user_seat-${length}-id">
+                            <td>
+                                <input type="number" name="user_seat-${length}-seat_number" value="0" class="form-control" placeholder="example 1,2...etc" min="0" aria-describedby="id_user_seat-${length}-seat_number_helptext" id="id_user_seat-${length}-seat_number">
+                                <small class="text-black-50">Seat number for identity</small>
+                            </td>
+                            <td>
+                                <input type="number" name="user_seat-${length}-seat_name" class="form-control" placeholder="example john doe" maxlength="255" aria-describedby="id_user_seat-${length}-seat_name_helptext" id="id_user_seat-${length}-seat_name">
+                                <small class="text-black-50">example john doe seats on number 2, instead of calling the seat number 2 we call it john seat</small>
+                            </td>
+                            <td>
+                                <button class="btn border-0 outline-0" onclick="this.parentNode.parentNode.remove()" role="button" type="button">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                `
+
+                document.getElementById('id_user_seat-TOTAL_FORMS').value = formCount + 1;
+
+            });
+        });
+    </script>
 {% endblock %}

@@ -28,7 +28,11 @@ class User(AbstractUser):
 
 class Seat(models.Model):
     user = models.ForeignKey(User, verbose_name=_("user"), related_name="user_seat", on_delete=models.CASCADE)
-    seat_number = models.PositiveIntegerField(verbose_name=_("Seat Number"), default=0)
+    seat_number = models.PositiveIntegerField(
+        verbose_name=_("Seat Number"),
+        default=0,
+        help_text=_("Seat number for identity"),
+        )
     seat_name = models.CharField(
         verbose_name=_("Seat Name"),
         max_length=255,

@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
     <section>
-        <div class="card  border-0">
-            <div class="card-header bg-transparent">
-                <h2 class="card-title">Foods List</h2>
+        <div class="card bg-white border-0 shadow-sm">
+            <div class="card-header border-0 bg-transparent">
+                <h2 class="card-title mb-0">Foods</h2>
             </div>
             <div class="card-body table-responsive">
-                <table class="table table-hover table-striped">
-                    <thead>
+                <table class="table">
+                    <thead class="table-dark">
                     <tr>
                         <th scope="row">ID</th>
                         <th scope="row">Food</th>
@@ -16,7 +16,7 @@
                         <th scope="row">Price</th>
                         <th scope="row" class="text-nowrap">Date Create</th>
                         <th scope="row" class="text-nowrap">Date Modify</th>
-                        <th scope="row">Active</th>
+                        <th scope="row">Visibility</th>
                         <th scope="row">Actions</th>
                     </tr>
                     </thead>
@@ -70,7 +70,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer bg-transparent">
+            <div class="card-footer border-0 bg-transparent">
                 <div class="float-end d-flex align-self-center justify-content-start gap-2">
                     <a href="?page=1" class="btn btn-sm btn-dark" {% if foods.number == 1 %}disabled {% endif %}>&laquo;
                         First</a>

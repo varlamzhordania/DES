@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User, Seat
 
 
-class SeatInline(admin.StackedInline):
+class SeatInline(admin.TabularInline):
     model = Seat
 
 

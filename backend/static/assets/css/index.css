@@ -290,16 +290,22 @@ body {
 .bounce-animation:hover {
     animation-name: none;
 }
-.themes{
+
+.themes {
     position: relative;
     display: block;
     height: 35px;
     width: 35px;
     cursor: pointer;
 }
-.themes.active{
+
+.themes.active {
     outline: 2px currentColor solid;
     outline-offset: 2px;
+}
+
+.w-lg {
+    width: 100%;
 }
 
 @keyframes bounce {
@@ -312,6 +318,10 @@ body {
     40%, 60% {
         transform: scale(1.08);
     }
+}
+
+.table-transparent td, .table-transparent th, .table-transparent tr {
+    background-color: transparent;
 }
 
 @media screen and (max-width: 576px) {
@@ -507,6 +517,10 @@ body {
     #message-list {
         height: 500px;
     }
+
+    .w-lg {
+        width: 50%;
+    }
 }
 
 @media screen and (min-width: 1200px) {
@@ -547,6 +561,10 @@ body {
 
     #message-list {
         height: 500px;
+    }
+
+    .w-lg {
+        width: 50%;
     }
 
 }

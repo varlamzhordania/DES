@@ -55,10 +55,10 @@ def users_list_view(request, *args, **kwargs):
 def users_detail_view(request, pk, *args, **kwargs):
     user = get_object_or_404(get_user_model(), id=pk)
     form = UserForm(instance=user)
-    formset = SeatFormSet(queryset=user.get_seats())
+    formset = SeatFormSet(instance=user)
     if request.method == "POST":
         form = UserForm(instance=user, data=request.POST)
-        formset = SeatFormSet(queryset=user.get_seats(), data=request.POST)
+        formset = SeatFormSet(instance=user, data=request.POST)
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()

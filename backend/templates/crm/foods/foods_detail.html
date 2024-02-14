@@ -4,10 +4,64 @@
         {% csrf_token %}
         <div class="card bg-white shadow-sm border-0">
             <div class="card-body">
-                {{ form }}
+                <div class="row row-gap-3">
+                    <div class="col-12 col-md-12 ">
+                        <div class="form-group w-lg">
+                            <label class="form-label" for="{{ form.name.name }}">{{ form.name.label }}</label>
+                            {{ form.name }}
+                            <small class="text-black-50">{{ form.name.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group w-lg">
+                            <label class="form-label" for="{{ form.category.name }}">{{ form.category.label }}</label>
+                            {{ form.category }}
+                            <small class="text-black-50">{{ form.category.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group w-lg">
+                            <label class="form-label" for="{{ form.price.name }}">{{ form.price.label }}</label>
+                            {{ form.price }}
+                            <small class="text-black-50">{{ form.price.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group w-lg">
+                            <label class="form-label"
+                                   for="{{ form.description.name }}">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            <small class="text-black-50">{{ form.description.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group w-lg">
+                            <label class="form-label"
+                                   for="{{ form.ingredients.name }}">{{ form.ingredients.label }}</label>
+                            {{ form.ingredients }}
+                            <small class="text-black-50">{{ form.ingredients.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group w-lg">
+                            <label class="form-label"
+                                   for="{{ form.thumbnail.name }}">{{ form.thumbnail.label }}</label>
+                            {{ form.thumbnail }}
+                            <small class="text-black-50">{{ form.thumbnail.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group w-lg">
+                            <label class="form-label"
+                                   for="{{ form.is_active.name }}">{{ form.is_active.label }}</label>
+                            {{ form.is_active }}
+                            <small class="text-black-50">{{ form.is_active.help_text }}</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-footer">
-                <button class="btn btn-dark" role="button" type="submit">Save</button>
+            <div class="card-footer bg-transparent border-0">
+                <button class="btn btn-primary text-white float-end" role="button" type="submit">Save changes</button>
             </div>
         </div>
     </form>

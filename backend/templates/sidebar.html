@@ -4,11 +4,25 @@
 {% url 'main:support' as support %}
 {% url 'main:settings' as user_settings %}
 {% url 'crm:dashboard' as dashboard %}
+{% url 'crm:users_list' as users_list %}
+{% url 'crm:foods_list' as foods_list %}
+{% url 'crm:categories_list' as categories_list %}
+{% url 'crm:dashboard_settings' as dashboard_settings %}
+
 <aside id="sidebar-aside">
     <div class="sidebar-wrapper shadow">
         <div class="sidebar">
-            <div class="d-flex justify-content-center align-items-center">
-                <h3 class="card-title text-primary fw-bold">Logo</h3>
+            <div class="d-flex justify-content-center align-items-center text-center">
+                {% if setting %}
+                    {% if setting.logo_mini %}
+                        <img src="{{ setting.logo_mini }}" alt="{{ setting.company_name }}" class="card-img" width="64"
+                             height="64"/>
+                    {% else %}
+                        <h5 class="card-title text-primary fw-bold">{{ setting.company_name }}</h5>
+                    {% endif %}
+                {% else %}
+                    <h5 class="card-title text-primary fw-bold">Logo</h5>
+                {% endif %}
             </div>
             <hr/>
             <ul class="list-unstyled">
@@ -47,6 +61,41 @@
                            href="{{ dashboard }}">
                             <i class="bi bi-app fs-1"></i>
                             <small class="my-0 text-truncate">Dashboard</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == users_list %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == users_list %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ users_list }}">
+                            <i class="bi bi-people fs-1"></i>
+                            <small class="my-0 text-truncate">Users</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == foods_list %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == foods_list %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ foods_list }}">
+                            <i class="bi bi-egg-fried fs-1"></i>
+                            <small class="my-0 text-truncate">Foods</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == categories_list %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == categories_list %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ categories_list }}">
+                            <i class="bi bi-grid fs-1"></i>
+                            <small class="my-0 text-truncate">Categories</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == users_list %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == users_list %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ users_list }}">
+                            <i class="bi bi-bar-chart fs-1"></i>
+                            <small class="my-0 text-truncate">Analytics</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == dashboard_settings %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == dashboard_settings %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ dashboard_settings }}">
+                            <i class="bi bi-gear fs-1"></i>
+                            <small class="my-0 text-truncate">Settings</small>
                         </a>
                     </li>
                 {% endif %}

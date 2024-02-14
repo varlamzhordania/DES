@@ -10,27 +10,43 @@ from .serializers import SafeUserSerializer, OrderSerializer, UserRoomSerializer
 from rest_framework.renderers import JSONRenderer
 from checkout.models import Order
 from .models import UserRoom
+from django.core.management import call_command
 import json
+
+
+call_command("deactivate_rooms")
 
 
 class StreamConsumer(AsyncWebsocketConsumer):
     user_room = None
     room_group_name = None
     user = None
+    room_id = None
 
     async def connect(self):
         self.user = await self.get_user()
         if self.user.is_anonymous:
             await self.close()
 
-        self.user_room, created = await self.get_or_create_user_room(self.user)
+        self.room_id = self.scope['url_route']['kwargs'].get('room_id', None)
+
+        if self.room_id:
+            self.user_room = await self.get_room_by_id(self.room_id)
+            await self.update_busy_status(self.user_room, True)
+        else:
+            self.user_room, created = await self.get_or_create_user_room(self.user)
+            await self.update_room_status(self.user_room, True)
+
         self.room_group_name = f'chat_room_{self.user_room.id}'
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.update_room_status(self.user_room, True)
         await self.accept()
 
     async def disconnect(self, close_code):
-        await self.update_room_status(self.user_room, False)
+        if self.room_id:
+            await self.update_busy_status(self.user_room, False)
+        else:
+            await self.update_room_status(self.user_room, False)
+
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data=None, bytes_data=None):
@@ -54,11 +70,19 @@ class StreamConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(self.room_group_name, {'type': 'send.sdp', 'dict_data': dict_data})
 
     async def send_sdp(self, event):
-        # Send the SDP message to the client
         dict_data = event['dict_data']
+
         await self.send(
             text_data=json.dumps(dict_data)
         )
+
+    async def send_reject(self, event):
+        dict_data = event['dict_data']
+        message = {
+            "action": "reject-call",
+            "message": dict_data
+        }
+        await self.send(text_data=json.dumps(message))
 
     @database_sync_to_async
     def get_user(self):
@@ -71,8 +95,18 @@ class StreamConsumer(AsyncWebsocketConsumer):
         return True
 
     @database_sync_to_async
+    def update_busy_status(self, room, value):
+        room.is_busy = value
+        room.save()
+        return True
+
+    @database_sync_to_async
     def get_or_create_user_room(self, user):
         return UserRoom.objects.get_or_create(user=user)
+
+    @database_sync_to_async
+    def get_room_by_id(self, room_id):
+        return UserRoom.objects.get(id=room_id)
 
 
 class AdminConsumer(AsyncWebsocketConsumer):
@@ -109,6 +143,9 @@ class AdminConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(self.admin_room, {'type': 'send.order_list', 'dict_data': {}})
         if action == 'room_list':
             await self.channel_layer.group_send(self.admin_room, {'type': 'send.room_list', 'dict_data': {}})
+        if action == 'reject_call':
+            room_name = f'chat_room_{message["id"]}'
+            await self.channel_layer.group_send(room_name, {'type': 'send.reject', 'dict_data': dict_data['message']})
         pass
 
     async def send_room_list(self, event):

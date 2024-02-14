@@ -7,3 +7,4 @@ class StreamConfig(AppConfig):
 
     def ready(self):
         import stream.signals
+

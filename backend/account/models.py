@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.shortcuts import reverse
 
 
 # Create your models here.
@@ -20,6 +21,9 @@ class User(AbstractUser):
 
     def get_seats(self):
         return self.user_seat.all()
+
+    def get_absolute_url(self):
+        return reverse("crm:users_detail", kwargs={"pk": self.pk})
 
 
 class Seat(models.Model):

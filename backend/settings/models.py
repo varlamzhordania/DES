@@ -1,8 +1,97 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from multiselectfield import MultiSelectField
 
 
-# Create your models here.
+class CustomMultiSelectField(MultiSelectField):
+    def _get_flatchoices(self):
+        flat_choices = super(models.CharField, self).flatchoices
+
+        class MSFFlatchoices(list):
+            # Used to trick django.contrib.admin.utils.display_for_field into not treating the list of values as a
+            # dictionary key (which errors out)
+            def __bool__(self):
+                return False
+
+            __nonzero__ = __bool__
+
+        return MSFFlatchoices(flat_choices)
+
+    flatchoices = property(_get_flatchoices)
+
+
+def upload_logo(instance, filename):
+    timestamp = timezone.now().strftime('%Y%m%d_%H%M%S')
+    extension = filename.split('.')[-1]
+    return f'images/site/{timestamp}.{extension}'
+
+
+class PaymentGateway(models.Model):
+    name = models.CharField(max_length=255, unique=True, verbose_name=_('Payment Gateway Name'))
+    secret_key = models.CharField(max_length=255, verbose_name=_('Secret Key'), blank=True, null=True)
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Date Create'))
+    update_at = models.DateTimeField(auto_now=True, verbose_name=_('Date Update'))
+
+    class Meta:
+        verbose_name = _('Payment')
+        verbose_name_plural = _('Payments')
+        ordering = ('-id',)
+
+    def __str__(self):
+        return self.name
+
+
+class Setting(models.Model):
+    class PaymentGatewayChoices(models.TextChoices):
+        CASH = 'CASH', _('Cash')
+        CREDIT = 'CREDIT', _('Credit')
+        DEBIT = 'DEBIT', _('Debit')
+        STRIPE = 'STRIPE', _('Stripe')
+
+    company_name = models.CharField(
+        max_length=255,
+        verbose_name=_('Company Name'),
+        blank=False,
+        null=False,
+        help_text=_("Company Name will be displayed on the home")
+    )
+    logo = models.ImageField(
+        upload_to=upload_logo,
+        verbose_name=_('Logo'),
+        help_text=_("it will be displayed for places that have big space"),
+        blank=True,
+        null=True
+    )
+    logo_mini = models.ImageField(
+        upload_to=upload_logo,
+        verbose_name=_('Logo mini'),
+        help_text=_("small size of logo, for sidebar"),
+        blank=True,
+        null=True
+    )
+    payment_gateways = CustomMultiSelectField(
+        max_length=255,
+        verbose_name=_('Payment Gateways'),
+        blank=True,
+        null=True,
+        choices=PaymentGatewayChoices,
+        help_text=_("Select one or more payment gateways")
+    )
+    payment_gateway_details = models.ManyToManyField(
+        PaymentGateway,
+        verbose_name=_("Payment Details"),
+        related_name="setting_payment_detail",
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = _("Setting")
+        verbose_name_plural = _("Settings")
+        ordering = ("-id",)
+
+    def __str__(self):
+        return f"{self.id} - {self.company_name}"
 
 
 class Theme(models.Model):

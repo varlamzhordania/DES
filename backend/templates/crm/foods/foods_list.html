@@ -1,0 +1,94 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+    <section>
+        <div class="card  border-0">
+            <div class="card-header bg-transparent">
+                <h2 class="card-title">Foods List</h2>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <th scope="row">Food</th>
+                        <th scope="row">Category</th>
+                        <th scope="row">Price</th>
+                        <th scope="row" class="text-nowrap">Date Create</th>
+                        <th scope="row" class="text-nowrap">Date Modify</th>
+                        <th scope="row">Active</th>
+                        <th scope="row">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for food in foods %}
+                        <tr>
+                            <th>#{{ food.pk }}</th>
+                            <td colspan="1" >
+                                <div class="hstack gap-3" style="width: 600px">
+                                    <div class="position-relative" style="width: 100px">
+                                        {% if food.thumbnail %}
+                                            <img src="{{ food.thumbnail.url }}" alt="{{ food.name }}" class="card-img">
+                                        {% else %}
+                                            <img src="{% static 'assets/image/food-default.jpg' %}"
+                                                 alt="{{ food.name }}" class="card-img">
+                                        {% endif %}
+                                    </div>
+                                    <div class="vstack gap-2" >
+                                        <div class="hstack justify-content-between">
+                                            <h5 class="fw-normal">
+                                                {{ food.name }}
+                                            </h5>
+                                        </div>
+                                        <p class="text-break mb-0" style="max-width: 650px">
+                                            {{ food.description|truncatechars:"50" }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ food.category }}</td>
+                            <td>${{ food.price }}</td>
+                            <td class="text-nowrap">{{ food.create_at }}</td>
+                            <td class="text-nowrap">{{ food.update_at }}</td>
+                            <td>
+                                {% if food.is_active %}
+                                    <i class="bi bi-check-square-fill text-success"></i>
+                                {% else %}
+                                    <i class="bi bi-check-square"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-nowrap">
+                                <div class="hstack gap-2">
+                                    <a href="{{ food.get_absolute_url }}" class="btn btn-sm btn-info text-white"><i
+                                            class="bi bi-pencil-fill"></i></a>
+                                    <a href="#" class="btn btn-sm btn-danger text-white"><i
+                                            class="bi bi-trash3-fill"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="float-end d-flex align-self-center justify-content-start gap-2">
+                    <a href="?page=1" class="btn btn-sm btn-dark" {% if foods.number == 1 %}disabled {% endif %}>&laquo;
+                        First</a>
+                    {% if foods.has_previous %}
+                        <a href="?page={{ foods.previous_page_number }}" class="btn btn-sm btn-dark">Previous</a>
+                    {% endif %}
+
+                    <span>
+                        {{ foods.number }}/{{ foods.paginator.num_pages }}.
+                    </span>
+
+                    {% if foods.has_next %}
+                        <a href="?page={{ foods.next_page_number }}" class="btn btn-sm btn-dark">Next</a>
+                    {% endif %}
+                    <a href="?page={{ foods.paginator.num_pages }}" class="btn btn-sm btn-dark">Last &raquo;</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

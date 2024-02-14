@@ -8,8 +8,7 @@ from django.db import transaction
 
 @receiver(post_save, sender=Order)
 def send_order_list_signal(sender, instance, created, **kwargs):
-    if created:
-        channel_layer = get_channel_layer()
-        transaction.on_commit(
-            lambda: async_to_sync(channel_layer.group_send)('admin_room', {'type': 'send.order_list', 'dict_data': {}})
-            )
+    channel_layer = get_channel_layer()
+    transaction.on_commit(
+        lambda: async_to_sync(channel_layer.group_send)('admin_room', {'type': 'send.order_list', 'dict_data': {}})
+        )

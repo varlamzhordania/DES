@@ -5,6 +5,7 @@ from autoslug import AutoSlugField
 from django.utils import timezone
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+from django.shortcuts import reverse
 
 
 def category_image(instance, filename):
@@ -62,6 +63,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("crm:categories_detail", kwargs={"pk": self.id})
 
 
 class Food(models.Model):
@@ -133,3 +137,6 @@ class Food(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("crm:foods_detail", kwargs={"pk": self.id})

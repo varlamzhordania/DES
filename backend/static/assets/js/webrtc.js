@@ -1,3 +1,5 @@
+import {toast} from "./utils.js";
+
 class Webrtc {
     constructor(localVideoId, videoContainerId, messageListId, messageInputId, btnSendMessageId, btnToggleAudio, btnToggleVideo, joinButton, disconnectButton) {
         this.localStream = new MediaStream();
@@ -133,11 +135,10 @@ class Webrtc {
         this.btnSendMessage.disabled = true
         this.messageInput.disabled = true
         this.messageInput.value = 'make call to use chat'
-
         this.initializeMedia();
     }
 
-    joinChat(username) {
+    joinChat(username, room_id) {
         if (!username) return;
         this.username = username;
         this.btnCall.classList.add("visually-hidden");
@@ -146,18 +147,27 @@ class Webrtc {
         this.messageInput.disabled = false
         this.messageInput.value = ''
 
-        this.setupWebSocket();
+        this.setupWebSocket(room_id);
     }
 
-    setupWebSocket() {
+    setupWebSocket(id) {
         let location = window.location;
+        let endpoint
         let wsStart = location.protocol === 'https:' ? 'wss://' : 'ws://';
-        let endpoint = wsStart + location.host + '/stream/';
+        if (id) {
+            endpoint = wsStart + location.host + `/stream/${id}/`;
+        } else {
+            endpoint = wsStart + location.host + '/stream/';
+        }
         this.websocket = new WebSocket(endpoint);
+        console.log(endpoint)
 
         this.websocket.addEventListener('open', (e) => this.onWebSocketOpen(e));
         this.websocket.addEventListener('message', (e) => this.onWebSocketMessage(e));
-        this.websocket.addEventListener('close', (e) => console.log('connection closed'));
+        this.websocket.addEventListener('close', (e) => this.disconnectCall());
+        this.websocket.addEventListener('close', (e) => {
+            toast("The call has ended.", 5000, "error")
+        });
         this.websocket.addEventListener('error', (e) => console.log('Error occurred!'));
     }
 
@@ -183,6 +193,10 @@ class Webrtc {
                 break;
             case 'new-answer':
                 this.handleNewAnswer(data.message.sdp, data.peer);
+                break;
+            case 'reject-call':
+                this.disconnectCall();
+                toast("Apologies, we are currently unable to answer your support call. Please try again later.", 5000, 'info');
                 break;
             default:
                 console.log('Unknown action received:', action);
@@ -382,13 +396,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const joinButton = document.querySelector('#btn-join');
     const disconnectButton = document.querySelector('#btn-disconnect');
     const usernameInput = document.querySelector('#username');
+    const roomIDInput = document.querySelector('#room_id');
 
     const chatApp = new Webrtc('#local-video', '#video-container', '#message-list', '#message-input', '#btn-send-message', '#btn-toggle-audio', '#btn-toggle-video', joinButton, disconnectButton);
 
     joinButton.addEventListener('click', () => {
         const username = usernameInput.value.trim();
+        let room_id = null
+        if (roomIDInput)
+            room_id = roomIDInput.value
         if (username) {
-            chatApp.joinChat(username);
+            chatApp.joinChat(username, room_id);
         } else {
             console.log(username)
             alert("Please enter a username.");

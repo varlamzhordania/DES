@@ -1,3 +1,5 @@
+import {toast} from "./utils.js";
+
 class ShoppingCart {
 
     constructor() {
@@ -33,7 +35,7 @@ class ShoppingCart {
 
 
         this.items = this.items.filter(item => item.quantity > 0);
-        this.toast(`${name} added to your cart`, 5000, "success")
+        toast(`${name} added to your cart`, 5000, "success")
         this.updateCart();
         this.updateServer()
     }
@@ -46,7 +48,7 @@ class ShoppingCart {
             this.items.splice(index, 1);
             this.updateCart();
             this.updateServer()
-            this.toast(`${name} deleted from your cart`, 5000, "error")
+            toast(`${name} deleted from your cart`, 5000, "error")
 
         } else {
             console.error("Item not found for removal.");
@@ -59,7 +61,7 @@ class ShoppingCart {
             this.items[index].quantity -= newQuantity
             this.items[index].seats = this.items[index].seats.filter(item => item !== seat)
             this.items = this.items.filter(item => item.quantity > 0);
-            this.toast(`${name} removed from your cart`, 5000, "error")
+            toast(`${name} removed from your cart`, 5000, "error")
             this.updateCart();
             this.updateServer()
         } else {
@@ -117,7 +119,7 @@ class ShoppingCart {
         const data = await response.json()
         if (response.status === 404 && data?.error === "food is not available") {
             this.removeItem(data?.data?.id)
-            this.toast(`unfortunately ${data.data.name} is not available right now!!!`, 5000, "warning")
+            toast(`unfortunately ${data.data.name} is not available right now!!!`, 5000, "warning")
         }
 
     }
@@ -150,41 +152,6 @@ class ShoppingCart {
         this.cartQuantity.textContent = this.getQuantity()
         this.shoppingCartTotal.textContent = '$' + this.calculateTotal().toFixed(2)
         this.subtotalSpan.textContent = '$' + this.calculateTotal().toFixed(2)
-    }
-
-    toast(text, duration = 5000, type = "info") {
-        let backgroundColor;
-
-        switch (type) {
-            case "info":
-                backgroundColor = "linear-gradient(to right, #3498db, #2980b9)";
-                break;
-            case "success":
-                backgroundColor = "linear-gradient(to right, #2ecc71, #27ae60)";
-                break;
-            case "error":
-                backgroundColor = "linear-gradient(to right, #e74c3c, #c0392b)";
-                break;
-            case "warning":
-                backgroundColor = "linear-gradient(to right, #f39c12, #d35400)";
-                break;
-            default:
-                backgroundColor = "linear-gradient(to right, #3498db, #2980b9)";
-                break;
-        }
-
-        Toastify({
-            text: text,
-            duration: duration,
-            newWindow: false,
-            close: true,
-            gravity: "bottom", // `top` or `bottom`
-            position: "right", // `left`, `center` or `right`
-            stopOnFocus: true, // Prevents dismissing of toast on hover
-            style: {
-                background: backgroundColor,
-            },
-        }).showToast();
     }
 
 

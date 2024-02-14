@@ -202,12 +202,6 @@
 
         {% elif request.user|has_group:"Manager" %}
             <header class="d-flex justify-content-between align-items-center">
-                <div class="d-flex justify-content-start align-self-center gap-2">
-                    <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
-                        <i class="bi bi-list text-light fs-5"></i>
-                    </button>
-                    <span class="badge bg-secondary fs-5 lh-base">{{ request.user.get_name }}</span>
-                </div>
             </header>
         {% endif %}
 

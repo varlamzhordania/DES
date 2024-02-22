@@ -20,7 +20,7 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: var(--bs-primary);
+    background: var(--bs-dark-bg-subtle);
 }
 
 
@@ -187,6 +187,7 @@ body {
 .seat.seat-sm {
     width: 35px;
     height: 35px;
+    padding: 3px;
 }
 
 .seat.seat-lg {
@@ -195,8 +196,8 @@ body {
 }
 
 .seat svg {
-    width: 45px;
-    height: 45px;
+    width: 45px !important;
+    height: 45px !important;
 }
 
 .seat.seat-deactive {

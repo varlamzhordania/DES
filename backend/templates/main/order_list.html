@@ -6,13 +6,12 @@
                 <thead>
                 <tr class="table-dark">
                     <th scope="row">ID</th>
-                    <th scope="row">Table</th>
+                    <th scope="row">Customer</th>
                     <th scope="row">Status</th>
                     <th scope="row">Amount</th>
                     <th scope="row">Method</th>
                     <th scope="row">Payment</th>
                     <th scope="row">Date</th>
-                    <th scope="row">Action</th>
                 </tr>
                 </thead>
                 <tbody id="order-table-body">
@@ -46,11 +45,10 @@
                     <td>$${parseFloat(order.total_price).toFixed(2)}</td>
                     <td><span class="badge bg-info">${order.payment_method}</span></td>
                     <td><span class="badge bg-secondary">${order.payment_status}</span></td>
-                    <td style="text-wrap: nowrap;">${new Intl.DateTimeFormat('en' ,{
+                    <td class="text-wrap">${new Intl.DateTimeFormat('en' ,{
                         dateStyle: 'long',
                         timeStyle: 'short',
                     }).format(new Date(order.create_at))}</td>
-                    <td><!-- Add action buttons if needed --></td>
                 `;
                     orderTableBody.appendChild(row);
                 });

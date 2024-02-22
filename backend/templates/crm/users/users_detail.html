@@ -6,7 +6,7 @@
             <div class="card-body">
                 <div class="row row-gap-3">
                     {% for item in form %}
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 {% if item == form.groups %}col-md-12{% else %}col-md-6{% endif %}">
                             <div class="form-group">
                                 <label class="form-label" for="{{ item.name }}">{{ item.label }}</label>
                                 {{ item }}
@@ -71,13 +71,13 @@
                 const row = table.insertRow(length + 1)
                 row.innerHTML = `
                         <tr>
-                            <input type="hidden" name="user_seat-${length}-id" id="id_user_seat-${length}-id">
+                            <input type="hidden" name="user_seat-${formCount}-id" id="id_user_seat-${formCount}-id">
                             <td>
-                                <input type="number" name="user_seat-${length}-seat_number" value="0" class="form-control" placeholder="example 1,2...etc" min="0" aria-describedby="id_user_seat-${length}-seat_number_helptext" id="id_user_seat-${length}-seat_number">
+                                <input type="number" name="user_seat-${formCount}-seat_number" value="0" class="form-control" placeholder="example 1,2...etc" min="0" aria-describedby="id_user_seat-${formCount}-seat_number_helptext" id="id_user_seat-${formCount}-seat_number">
                                 <small class="text-black-50">Seat number for identity</small>
                             </td>
                             <td>
-                                <input type="number" name="user_seat-${length}-seat_name" class="form-control" placeholder="example john doe" maxlength="255" aria-describedby="id_user_seat-${length}-seat_name_helptext" id="id_user_seat-${length}-seat_name">
+                                <input type="number" name="user_seat-${formCount}-seat_name" class="form-control" placeholder="example john doe" maxlength="255" aria-describedby="id_user_seat-${formCount}-seat_name_helptext" id="id_user_seat-${formCount}-seat_name">
                                 <small class="text-black-50">example john doe seats on number 2, instead of calling the seat number 2 we call it john seat</small>
                             </td>
                             <td>

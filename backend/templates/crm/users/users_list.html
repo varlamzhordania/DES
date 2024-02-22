@@ -3,7 +3,12 @@
     <section>
         <div class="card bg-white border-0 shadow-sm">
             <div class="card-header border-0 bg-transparent">
-                <h2 class="card-title mb-0">Users</h2>
+                <div class="hstack justify-content-between align-items-center">
+                    <h2 class="card-title mb-0">Users</h2>
+                    <button class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modal-user">
+                        Create new user
+                    </button>
+                </div>
             </div>
             <div class="card-body table-responsive">
                 <table class="table">
@@ -57,8 +62,8 @@
                                 <div class="hstack gap-2">
                                     <a href="{{ user.get_absolute_url }}" class="btn btn-sm btn-info text-white"><i
                                             class="bi bi-pencil-fill"></i></a>
-                                    <a href="#" class="btn btn-sm btn-danger text-white"><i
-                                            class="bi bi-trash3-fill"></i></a>
+{#                                    <a href="#" class="btn btn-sm btn-danger text-white"><i#}
+{#                                            class="bi bi-trash3-fill"></i></a>#}
                                 </div>
                             </td>
                         </tr>
@@ -68,23 +73,58 @@
             </div>
             <div class="card-footer border-0 bg-transparent">
                 <div class="float-end d-flex align-self-center justify-content-start gap-2">
-                    <a href="?page=1" class="btn btn-sm btn-dark" {% if users.number == 1 %}disabled {% endif %}>&laquo;
+                    <a href="?page=1" class="btn btn-sm btn-secondary text-white"
+                       {% if users.number == 1 %}disabled {% endif %}>&laquo;
                         First</a>
                     {% if users.has_previous %}
-                        <a href="?page={{ users.previous_page_number }}" class="btn btn-sm btn-dark">Previous</a>
+                        <a href="?page={{ users.previous_page_number }}" class="btn btn-sm btn-secondary text-white">Previous</a>
                     {% endif %}
 
                     <span>
-                        {{ users.number }}/{{ users.paginator.num_pages }}.
+                        {{ users.number }}/{{ users.paginator.num_pages }}
                     </span>
 
                     {% if users.has_next %}
-                        <a href="?page={{ users.next_page_number }}" class="btn btn-sm btn-dark">Next</a>
+                        <a href="?page={{ users.next_page_number }}"
+                           class="btn btn-sm btn-secondary text-white">Next</a>
                     {% endif %}
-                    <a href="?page={{ users.paginator.num_pages }}" class="btn btn-sm btn-dark">Last &raquo;</a>
+                    <a href="?page={{ users.paginator.num_pages }}" class="btn btn-sm btn-secondary text-white">Last
+                        &raquo;</a>
                 </div>
             </div>
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="modal-user" tabindex="-1" aria-labelledby="modalAddUser" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form method="post" action="." enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add new user</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row row-gap-3">
+                                {% for item in form %}
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="form-label" for="{{ item.name }}">{{ item.label }}</label>
+                                            {{ item }}
+                                            <small class="text-black-50">{{ item.help_text }}</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Close
+                            </button>
+                            <button type="submit" role="button" class="btn btn-primary text-white">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </section>
 {% endblock %}

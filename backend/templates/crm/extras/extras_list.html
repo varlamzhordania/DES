@@ -1,13 +1,12 @@
 {% extends 'index.html' %}
-{% load static %}
 {% block content %}
     <section>
-        <div class="card bg-white shadow-sm border-0">
+        <div class="card bg-white border-0 shadow-sm">
             <div class="card-header border-0 bg-transparent">
                 <div class="hstack justify-content-between align-items-center">
-                    <h2 class="card-title">Categories</h2>
-                    <button class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modal-category">
-                        Create new category
+                    <h2 class="card-title mb-0">Extras</h2>
+                    <button class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modal-extra">
+                        Create new extra
                     </button>
                 </div>
             </div>
@@ -16,7 +15,8 @@
                     <thead class="table-dark">
                     <tr>
                         <th scope="row">ID</th>
-                        <th scope="row">Category</th>
+                        <th scope="row">name</th>
+                        <th scope="row">Price</th>
                         <th scope="row" class="text-nowrap">Date Create</th>
                         <th scope="row" class="text-nowrap">Date Modify</th>
                         <th scope="row">Visibility</th>
@@ -24,36 +24,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for category in categories %}
+                    {% for extra in extras %}
                         <tr>
-                            <th>#{{ category.pk }}</th>
-                            <td colspan="1">
-                                <div class="hstack gap-3" style="width: 600px">
-                                    <div class="position-relative" style="width: 100px;">
-                                        {% if category.image %}
-                                            <img src="{{ category.image.url }}" alt="{{ category.name }}"
-                                                 class="card-img">
-                                        {% else %}
-                                            <img src="{% static 'assets/image/category-default.jpg' %}"
-                                                 alt="{{ category.name }}" class="card-img">
-                                        {% endif %}
-                                    </div>
-                                    <div class="vstack gap-2">
-                                        <div class="hstack justify-content-between">
-                                            <h5 class="fw-normal">
-                                                {{ category.name }}
-                                            </h5>
-                                        </div>
-                                        <p class="text-break mb-0" style="max-width: 650px">
-                                            {{ category.description|truncatechars:"50" }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-nowrap">{{ category.create_at }}</td>
-                            <td class="text-nowrap">{{ category.update_at }}</td>
+                            <th>#{{ extra.id }}</th>
+                            <td>{{ extra.name }}</td>
+                            <td>${{ extra.price }}</td>
+                            <td class="text-nowrap">{{ extra.create_at }}</td>
+                            <td class="text-nowrap">{{ extra.update_at }}</td>
                             <td>
-                                {% if category.is_active %}
+                                {% if extra.is_active %}
                                     <i class="bi bi-check-square-fill text-success"></i>
                                 {% else %}
                                     <i class="bi bi-check-square"></i>
@@ -61,15 +40,19 @@
                             </td>
                             <td class="text-nowrap">
                                 <div class="hstack gap-2">
-                                    <a href="{{ category.get_absolute_url }}" class="btn btn-sm btn-info text-white"><i
+                                    <a href="{{ extra.get_absolute_url }}" class="btn btn-sm btn-info text-white"><i
                                             class="bi bi-pencil-fill"></i></a>
-                                    <button class="btn btn-sm btn-danger text-white btn-category-delete"
-                                            data-id="{{ category.id }}"
-                                            data-name="{{ category.name }}">
+                                    <button class="btn btn-sm btn-danger text-white btn-extra-delete"
+                                            data-id="{{ extra.id }}"
+                                            data-name="{{ extra.name }}">
                                         <i class="bi bi-trash3-fill"></i>
                                     </button>
                                 </div>
                             </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="12">No extra have been listed yet</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -78,33 +61,32 @@
             <div class="card-footer border-0 bg-transparent">
                 <div class="float-end d-flex align-self-center justify-content-start gap-2">
                     <a href="?page=1" class="btn btn-sm btn-secondary text-white"
-                       {% if categories.number == 1 %}disabled {% endif %}>&laquo;
-                        First</a>
-                    {% if categories.has_previous %}
-                        <a href="?page={{ categories.previous_page_number }}"
-                           class="btn btn-sm btn-secondary text-white">Previous</a>
+                       {% if extras.number == 1 %}disabled {% endif %}>
+                        &laquo;First
+                    </a>
+                    {% if extras.has_previous %}
+                        <a href="?page={{ extras.previous_page_number }}" class="btn btn-sm btn-secondary text-white">Previous</a>
                     {% endif %}
 
                     <span>
-                        {{ categories.number }}/{{ categories.paginator.num_pages }}.
+                        {{ extras.number }}/{{ extras.paginator.num_pages }}
                     </span>
 
-                    {% if categories.has_next %}
-                        <a href="?page={{ categories.next_page_number }}" class="btn btn-sm btn-secondary text-white">Next</a>
+                    {% if extras.has_next %}
+                        <a href="?page={{ extras.next_page_number }}"
+                           class="btn btn-sm btn-secondary text-white">Next</a>
                     {% endif %}
-                    <a href="?page={{ categories.paginator.num_pages }}" class="btn btn-sm btn-secondary text-white">Last
-                        &raquo;</a>
+                    <a href="?page={{ extras.paginator.num_pages }}" class="btn btn-sm btn-secondary text-white">Last&raquo;</a>
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="modal-category" tabindex="-1" aria-labelledby="modalAddCategory" aria-hidden="true">
+        <div class="modal fade" id="modal-extra" tabindex="-1" aria-labelledby="modalAddExtra" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="post" action="." enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add new category</h1>
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add new extra</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -121,8 +103,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Close
-                            </button>
+                            <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Close</button>
                             <button type="submit" role="button" class="btn btn-primary text-white">Create</button>
                         </div>
                     </form>
@@ -130,18 +111,18 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modal-category-delete" tabindex="-1" aria-labelledby="modalDeleteCategory"
+        <div class="modal fade" id="modal-extra-delete" tabindex="-1" aria-labelledby="modalDeleteExtra"
              aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form method="post" action="{% url 'crm:categories_delete' %}" enctype="multipart/form-data">
-                        <input type="hidden" name="category-id" id="input-category-id" value="">
+                    <form method="post" action="{% url 'crm:extras_delete' %}" enctype="multipart/form-data">
+                        <input type="hidden" name="extra-id" id="input-extra-id" value="">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="delete-category-title"></h1>
+                            <h1 class="modal-title fs-5" id="delete-extra-title"></h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body" id="delete-category-body">
+                        <div class="modal-body" id="delete-extra-body">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Cancel
@@ -152,6 +133,5 @@
                 </div>
             </div>
         </div>
-
     </section>
 {% endblock %}

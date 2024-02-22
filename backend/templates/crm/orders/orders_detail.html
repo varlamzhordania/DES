@@ -1,0 +1,202 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+    <div class="row row-gap-3">
+        <section class="col-12">
+            <div class="hstack gap-3 justify-content-between align-items-center">
+                <div class="hstack gap-3">
+                    <h3 class="card-title fw-bold text-primary">Order #{{ order.id }}</h3>
+                    {% if order.payment_status == "COMPLETED" %}
+                        <div class="badge bg-success-subtle text-success fs-6">
+                            <i class="bi bi-cash me-1"></i>
+                            {{ order.get_payment_status_display }}
+                        </div>
+                    {% else %}
+                        <div class="badge bg-dark-subtle text-dark fs-6">
+                            <i class="bi bi-cash me-1"></i>
+                            {{ order.get_payment_status_display }}
+                        </div>
+                    {% endif %}
+                    {% if order.status == "COMPLETED" %}
+                        <div class="badge bg-success-subtle text-success fs-6">
+                            <i class="bi bi-clipboard-check-fill me-1"></i>
+                            {{ order.get_status_display }}
+                        </div>
+                    {% elif order.status == "PROCESSING" %}
+                        <div class="badge bg-info-subtle text-info fs-6">
+                            <i class="bi bi-clipboard-check-fill me-1"></i>
+                            {{ order.get_status_display }}
+                        </div>
+                    {% else %}
+                        <div class="badge bg-dark-subtle text-dark fs-6">
+                            <i class="bi bi-clipboard-check-fill me-1"></i>
+                            {{ order.get_status_display }}
+                        </div>
+                    {% endif %}
+                    <div class="vr"></div>
+                    <div class="badge bg-dark-subtle text-dark fs-6">
+                        <i class="bi bi-calendar-event-fill me-1"></i>
+                        {{ order.create_at }}
+                    </div>
+                </div>
+                <div class="hstack gap-3">
+                    <button class="btn btn-primary text-white">Fulfil</button>
+                    <button class="btn btn-primary text-white">Process</button>
+                    <button class="btn btn-primary text-white">Complete</button>
+                </div>
+
+            </div>
+        </section>
+        <div class="col col-12 col-md-8 col-lg-9 col-xl-9">
+            <div class="row row-gap-3">
+                {% if order.description %}
+                    <section class="col col-12">
+                        <div class="alert alert-info" role="alert">
+                            <h4 class="alert-heading fw-bold text-info">Note:</h4>
+                            <p class="text-black">{{ order.description }}</p>
+                        </div>
+                    </section>
+                {% endif %}
+
+                <section class="col col-12">
+                    <div class="card shadow-sm border-0 bg-white">
+                        <div class="card-header border-0 bg-transparent">
+                            <h4 class="card-title text-primary-emphasis fw-bold">Items</h4>
+                        </div>
+                        <div class="card-body pt-0">
+                            <ul class="list-group list-group-flush overflow-y-auto" style="max-height: 600px">
+                                {% for item in order.order_items.all %}
+                                    <li class="list-group-item bg-transparent">
+                                        <div class="row gap-1 py-2">
+                                            <div class="col-4 p-0" style="max-width: 100px">
+                                                {% if item.food.thumbnail %}
+                                                    <img src="{{ item.food.thumbnail.url }}" alt="{{ item.food.name }}"
+                                                         class="card-img">
+                                                {% else %}
+                                                    <img src="{% static 'assets/image/food-default.jpg' %}"
+                                                         alt="{{ item.food.name }}" class="card-img">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="vstack gap-2">
+                                                    <div class="vstack justify-content-start gap-1">
+                                                        <h5 class="fw-normal text-dark-emphasis">
+                                                            {{ item.food.name }}
+                                                        </h5>
+                                                        <div class="hstack gap-2 justify-content-start align-items-center flex-wrap">
+                                                            {% for seat in item.seats.all %}
+                                                                <div class="d-flex flex-column justify-content-center align-items-start"
+                                                                     style="min-width: 50px">
+                                                                    <div class="seat seat-sm text-light mb-1 seat-active">
+                                                                        <svg width="64" height="64" viewBox="0 0 24 24"
+                                                                             xmlns="http://www.w3.org/2000/svg"
+                                                                             style="">
+                                                                            <path fill="currentColor"
+                                                                                  d="M7.402 4.5C7 5.196 7 6.13 7 8v4.027C7.43 12 7.914 12 8.435 12h7.13c.52 0 1.005 0 1.435.027V8c0-1.87 0-2.804-.402-3.5A3 3 0 0 0 15.5 3.402C14.804 3 13.87 3 12 3s-2.804 0-3.5.402A3 3 0 0 0 7.402 4.5"
+                                                                                  opacity=".5"/>
+                                                                            <path fill="currentColor"
+                                                                                  d="M6.25 15.991c-.502-.02-.806-.088-1.014-.315c-.297-.324-.258-.774-.18-1.675c.055-.65.181-1.088.467-1.415C6.035 12 6.858 12 8.505 12h6.99c1.647 0 2.47 0 2.982.586c.286.326.412.764.468 1.415c.077.9.116 1.351-.181 1.675c-.208.227-.512.295-1.014.315V21a.75.75 0 1 1-1.5 0v-5h-8.5v5a.75.75 0 1 1-1.5 0z"/>
+                                                                        </svg>
+                                                                    </div>
+                                                                    <span class="small text-muted">{{ seat.get_alias_name|truncatechars:10 }}</span>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-2">
+
+                                                <h5 class="fw-normal text-dark-emphasis">
+                                                    ${{ item.food.price }}
+                                                </h5>
+
+                                            </div>
+                                            <div class="col-2">
+
+                                                <h5 class="fw-normal text-dark-emphasis">
+                                                    {{ item.quantity }}
+                                                </h5>
+
+                                            </div>
+                                            <div class="col-2">
+                                                <h5 class="fw-normal text-primary">
+                                                    ${{ item.total_cost }}
+                                                </h5>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                <section class="col col-12">
+                    <div class="card shadow-sm border-0 bg-white">
+                        <div class="card-header border-0 bg-transparent">
+                            <h4 class="card-title text-primary-emphasis fw-bold">Extras</h4>
+                        </div>
+                        <div class="card-body pt-0 d-flex flex-wrap justify-content-start align-self-start">
+                            {% for extra in order.extras.all %}
+                                <div class="form-check form-check-inline form-check-extra">
+                                    <input class="form-check-input extra-checkbox" type="checkbox" name="extras" checked disabled value="{{ extra.id }}">
+                                    <label class="form-check-label" for="extra-checkbox-{{ extra.id }}">
+                                        {{ extra.name }}
+                                        <small class="fw-bold">
+                                            (${{extra.price}})
+                                        </small>
+                                    </label>
+                                </div>
+                            {% empty %}
+                                empty
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <aside class="col col-12 col-md-4 col-lg-3 col-xl-3">
+            <div class="card shadow-sm border-0 bg-white ">
+                <div class="card-body">
+                    <h4 class="card-title text-dark fw-bold">Information</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
+                            <h6 class="card-title fw-bold text-dark-emphasis">Table: </h6><h6
+                                class="text-black-50 fw-normal">{{ order.user }}</h6>
+                        </li>
+                        <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
+                            <h6 class="card-title fw-bold text-dark-emphasis">Customer: </h6><h6
+                                class="text-black-50 fw-normal">{{ order.session_customer }}</h6>
+                        </li>
+                        <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
+                            <h6 class="card-title fw-bold text-dark-emphasis">Method: </h6><h6
+                                class="text-black-50 fw-normal">{{ order.get_payment_method_display }}</h6>
+                        </li>
+                    </ul>
+                    <hr/>
+                    <h4 class="card-title text-dark fw-bold">Summery</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
+                            <h6 class="card-title fw-bold text-dark-emphasis">Subtotal: </h6><h6
+                                class="text-black-50 fw-normal">${{ order.get_subtotal|floatformat:2 }}</h6>
+                        </li>
+                        <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
+                            <h6 class="card-title fw-bold text-dark-emphasis">Extras: </h6><h6
+                                class="text-black-50 fw-normal">${{ order.get_extras_cost|floatformat:2 }}</h6>
+                        </li>
+                        <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
+                            <h6 class="card-title fw-bold text-dark-emphasis">Tip:</h6><h6
+                                class="text-black-50 fw-normal">${{ order.tips.amount|default:0 }}{% if order.tips %}({{ order.tips.name }}){% endif %}</h6>
+                        </li>
+                        <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
+                            <h6 class="card-title fw-bold text-dark-emphasis">Total: </h6><h6
+                                class="text-black-50 fw-normal">${{ order.get_total_price|floatformat:2 }}</h6>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </div>
+{% endblock %}

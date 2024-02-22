@@ -4,6 +4,37 @@ from django.contrib.auth import get_user_model
 from account.models import Seat
 from main.models import Food, Category
 from settings.models import Theme, Setting
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import password_validation
+from checkout.models import Tip, Extra, Order
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+
+class ExtraForm(forms.ModelForm):
+    class Meta:
+        model = Extra
+        fields = '__all__'
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "price": forms.NumberInput(attrs={"class": "form-control"}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+
+class TipForm(forms.ModelForm):
+    class Meta:
+        model = Tip
+        fields = '__all__'
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "amount": forms.NumberInput(attrs={"class": "form-control"}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
 
 
 class SettingForm(forms.ModelForm):
@@ -44,8 +75,8 @@ class CategoryForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "example : Sea food"}),
             "description": forms.Textarea(attrs={"class": "form-control"}),
-            "image":forms.ClearableFileInput(attrs={"class": "form-control"}),
-            "is_active":  forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
 
@@ -80,16 +111,49 @@ class UserForm(forms.ModelForm):
     )
     is_staff = forms.BooleanField(
         label=_("Staff"),
+        required=False,
         widget=forms.CheckboxInput(attrs={'class': "form-check-input", })
     )
     is_active = forms.BooleanField(
         label=_("Active"),
+        required=False,
         widget=forms.CheckboxInput(attrs={'class': "form-check-input", })
     )
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'first_name', "is_staff", "is_active"]
+        fields = ['username', 'first_name', "groups", "is_staff", "is_active"]
+        widgets = {
+            "groups": forms.SelectMultiple(attrs={"class": "form-select"}),
+        }
+
+
+class CustomUserCreationForm(UserCreationForm):
+    password1 = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"class": "form-control", "autocomplete": "new-password"}),
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput(attrs={"class": "form-control", "autocomplete": "new-password"}),
+        strip=False,
+        help_text=_("Enter the same password as before, for verification."),
+    )
+    is_staff = forms.BooleanField(
+        label=_("Staff"),
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': "form-check-input", })
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = ["username", "password1", "password2", "groups", "is_staff"]
+        widgets = {
+            "username": forms.TextInput(attrs={"class": "form-control"}),
+            "groups": forms.SelectMultiple(attrs={"class": "form-select"}),
+        }
 
 
 class SeatForm(forms.ModelForm):

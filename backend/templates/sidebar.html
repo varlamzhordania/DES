@@ -1,12 +1,16 @@
 {% load custom_filters %}
 {% url 'main:home' as home %}
+{% url 'account:logout' as logout %}
 {% url 'main:order_list' as order_list %}
 {% url 'main:support' as support %}
 {% url 'main:settings' as user_settings %}
 {% url 'crm:dashboard' as dashboard %}
 {% url 'crm:users_list' as users_list %}
+{% url 'crm:orders_list' as orders_list %}
 {% url 'crm:foods_list' as foods_list %}
 {% url 'crm:categories_list' as categories_list %}
+{% url 'crm:tips_list' as tips_list %}
+{% url 'crm:extras_list' as extras_list %}
 {% url 'crm:dashboard_settings' as dashboard_settings %}
 
 <aside id="sidebar-aside">
@@ -63,25 +67,46 @@
                             <small class="my-0 text-truncate">Dashboard</small>
                         </a>
                     </li>
-                    <li class="my-3 {% if request.path == users_list %}bg-primary-subtle{% endif %} rounded nav-item">
-                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == users_list %}link-primary {% else %}link-dark{% endif %} "
+                    <li class="my-3 {% if request.path == users_list or "users" in request.path %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == users_list or "users" in request.path %}link-primary {% else %}link-dark{% endif %} "
                            href="{{ users_list }}">
                             <i class="bi bi-people fs-1"></i>
                             <small class="my-0 text-truncate">Users</small>
                         </a>
                     </li>
-                    <li class="my-3 {% if request.path == foods_list %}bg-primary-subtle{% endif %} rounded nav-item">
-                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == foods_list %}link-primary {% else %}link-dark{% endif %} "
+                    <li class="my-3 {% if request.path == orders_list or "orders" in request.path %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == orders_list or "orders" in request.path %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ orders_list }}">
+                            <i class="bi bi-clipboard fs-1"></i>
+                            <small class="my-0 text-truncate">Orders</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == foods_list or "foods" in request.path %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == foods_list  or "foods" in request.path %}link-primary {% else %}link-dark{% endif %} "
                            href="{{ foods_list }}">
                             <i class="bi bi-egg-fried fs-1"></i>
                             <small class="my-0 text-truncate">Foods</small>
                         </a>
                     </li>
-                    <li class="my-3 {% if request.path == categories_list %}bg-primary-subtle{% endif %} rounded nav-item">
-                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == categories_list %}link-primary {% else %}link-dark{% endif %} "
+                    <li class="my-3 {% if request.path == categories_list  or "categories" in request.path %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == categories_list or "categories" in request.path %}link-primary {% else %}link-dark{% endif %} "
                            href="{{ categories_list }}">
                             <i class="bi bi-grid fs-1"></i>
                             <small class="my-0 text-truncate">Categories</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == extras_list or "extras" in request.path %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == extras_list or "extras" in request.path %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ extras_list }}">
+                            <i class="bi bi-bag-plus fs-1"></i>
+                            <small class="my-0 text-truncate">Extras</small>
+                        </a>
+                    </li>
+                    <li class="my-3 {% if request.path == tips_list or "tips" in request.path %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == tips_list or "tips" in request.path  %}link-primary {% else %}link-dark{% endif %} "
+                           href="{{ tips_list }}">
+                            <i class="bi bi-cash-coin fs-1"></i>
+                            <small class="my-0 text-truncate">Tips</small>
                         </a>
                     </li>
                     <li class="my-3 {% if request.path == users_list %}bg-primary-subtle{% endif %} rounded nav-item">
@@ -91,11 +116,18 @@
                             <small class="my-0 text-truncate">Analytics</small>
                         </a>
                     </li>
-                    <li class="my-3 {% if request.path == dashboard_settings %}bg-primary-subtle{% endif %} rounded nav-item">
-                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == dashboard_settings %}link-primary {% else %}link-dark{% endif %} "
+                    <li class="my-3 {% if request.path == dashboard_settings or "settings" in request.path  %}bg-primary-subtle{% endif %} rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 {% if request.path == dashboard_settings or "settings" in request.path %}link-primary {% else %}link-dark{% endif %} "
                            href="{{ dashboard_settings }}">
                             <i class="bi bi-gear fs-1"></i>
                             <small class="my-0 text-truncate">Settings</small>
+                        </a>
+                    </li>
+                    <li class="my-3 rounded nav-item">
+                        <a class="nav-link  d-flex flex-row flex-md-column align-items-center justify-content-start gap-2 pb-md-2 gap-md-0 link-dark "
+                           href="{{ logout }}">
+                            <i class="bi bi-box-arrow-right fs-1"></i>
+                            <small class="my-0 text-truncate">Logout</small>
                         </a>
                     </li>
                 {% endif %}

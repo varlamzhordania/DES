@@ -1,9 +1,11 @@
 from django.db import models
+from django.db.models import Sum, F
 from main.models import Food
 from django.contrib.auth import get_user_model
 from account.models import Seat
 from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
+from django.shortcuts import reverse
 
 
 # Create your models here.
@@ -27,6 +29,9 @@ class Extra(models.Model):
     def __str__(self):
         return f"{self.name} - ${self.price}"
 
+    def get_absolute_url(self):
+        return reverse("crm:extras_detail", kwargs={"pk": self.pk})
+
 
 class Tip(models.Model):
     name = models.CharField(max_length=255, verbose_name=_("Tip Name"))
@@ -45,6 +50,9 @@ class Tip(models.Model):
 
     def __str__(self):
         return f"{self.name} - ${self.amount}"
+
+    def get_absolute_url(self):
+        return reverse("crm:tips_detail", kwargs={"pk": self.id})
 
 
 class Cart(models.Model):
@@ -204,8 +212,6 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} - {self.user.get_name()}"
 
-    from decimal import Decimal
-
     def get_total_price(self):
         tip_amount = Decimal(self.tips.amount) if self.tips else Decimal('0')
         extras_price = sum(Decimal(extra.price) for extra in self.extras.all())
@@ -213,6 +219,16 @@ class Order(models.Model):
 
         total_price = tip_amount + extras_price + items_price
         return total_price
+
+    def get_subtotal(self):
+        return self.order_items.values("price", "quantity").aggregate(subtotal=Sum(F("price") * F("quantity")))[
+            "subtotal"] or 0
+
+    def get_extras_cost(self):
+        return self.extras.values("price").aggregate(total=Sum("price"))["total"] or 0
+
+    def get_absolute_url(self):
+        return reverse("crm:orders_detail", kwargs={"pk": self.id})
 
 
 class OrderItem(models.Model):
@@ -255,3 +271,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} of {self.food}"
+
+    def total_cost(self):
+        return Decimal(self.price * self.quantity)

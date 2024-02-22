@@ -5,10 +5,10 @@
         <div class="card bg-white border-0 shadow-sm">
             <div class="card-header border-0 bg-transparent">
                 <div class="hstack justify-content-between align-items-center">
-                    <h2 class="card-title mb-0">Foods</h2>
-                    <button class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modal-food">
-                        Create new food
-                    </button>
+                    <h2 class="card-title mb-0">Orders</h2>
+{#                    <button class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modal-order">#}
+{#                        Create new order#}
+{#                    </button>#}
                 </div>
             </div>
             <div class="card-body table-responsive">
@@ -16,61 +16,31 @@
                     <thead class="table-dark">
                     <tr>
                         <th scope="row">ID</th>
-                        <th scope="row">Food</th>
-                        <th scope="row">Category</th>
-                        <th scope="row">Price</th>
+                        <th scope="row">Table</th>
+                        <th scope="row">Alias</th>
+                        <th scope="row">Status</th>
+                        <th scope="row">Method</th>
+                        <th scope="row">Payment</th>
                         <th scope="row" class="text-nowrap">Date Create</th>
                         <th scope="row" class="text-nowrap">Date Modify</th>
-                        <th scope="row">Visibility</th>
                         <th scope="row">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for food in foods %}
+                    {% for order in orders %}
                         <tr>
-                            <th>#{{ food.pk }}</th>
-                            <td colspan="1">
-                                <div class="hstack gap-3" style="width: 600px">
-                                    <div class="position-relative" style="width: 100px">
-                                        {% if food.thumbnail %}
-                                            <img src="{{ food.thumbnail.url }}" alt="{{ food.name }}" class="card-img">
-                                        {% else %}
-                                            <img src="{% static 'assets/image/food-default.jpg' %}"
-                                                 alt="{{ food.name }}" class="card-img">
-                                        {% endif %}
-                                    </div>
-                                    <div class="vstack gap-2">
-                                        <div class="hstack justify-content-between">
-                                            <h5 class="fw-normal">
-                                                {{ food.name }}
-                                            </h5>
-                                        </div>
-                                        <p class="text-break mb-0" style="max-width: 650px">
-                                            {{ food.description|truncatechars:"50" }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{ food.category }}</td>
-                            <td>${{ food.price }}</td>
-                            <td class="text-nowrap">{{ food.create_at }}</td>
-                            <td class="text-nowrap">{{ food.update_at }}</td>
-                            <td>
-                                {% if food.is_active %}
-                                    <i class="bi bi-check-square-fill text-success"></i>
-                                {% else %}
-                                    <i class="bi bi-check-square"></i>
-                                {% endif %}
-                            </td>
+                            <th>#{{ order.pk }}</th>
+                            <td>{{ order.user }}</td>
+                            <td>{{ order.session_customer }}</td>
+                            <td>{{ order.get_status_display }}</td>
+                            <td>{{ order.get_payment_method_display }}</td>
+                            <td>{{ order.get_payment_status_display }}</td>
+                            <td class="text-nowrap">{{ order.create_at }}</td>
+                            <td class="text-nowrap">{{ order.update_at }}</td>
                             <td class="text-nowrap">
                                 <div class="hstack gap-2">
-                                    <a href="{{ food.get_absolute_url }}" class="btn btn-sm btn-info text-white"><i
-                                            class="bi bi-pencil-fill"></i></a>
-                                    <button class="btn btn-sm btn-danger text-white btn-food-delete"
-                                            data-id="{{ food.id }}"
-                                            data-name="{{ food.name }}">
-                                        <i class="bi bi-trash3-fill"></i>
-                                    </button>
+                                    <a href="{{ order.get_absolute_url }}" class="btn btn-sm btn-primary text-white"><i
+                                            class="bi bi-eye-fill"></i></a>
                                 </div>
                             </td>
                         </tr>

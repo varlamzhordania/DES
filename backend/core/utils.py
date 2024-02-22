@@ -15,6 +15,13 @@ def fancy_message(request, body, level="info"):
                     messages.ERROR if level == "error" else (messages.SUCCESS if level == "success" else messages.INFO),
                     f"{field_name}: {error}"
                 )
+    elif isinstance(body, list):
+        for error in body:
+            messages.add_message(
+                request,
+                messages.ERROR if level == "error" else (messages.SUCCESS if level == "success" else messages.INFO),
+                error
+            )
     elif isinstance(body, str):
         messages.add_message(
             request,
@@ -23,6 +30,7 @@ def fancy_message(request, body, level="info"):
         )
 
     else:
+        print(type(body))
         raise ValueError("Unsupported message body type")
 
 

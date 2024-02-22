@@ -9,6 +9,7 @@ import logging
 
 # Create your views here.
 
+
 @unauthenticated_user
 def login_view(request, *args, **kwargs):
     next_url = request.GET.get('next', None)
@@ -38,3 +39,10 @@ def login_view(request, *args, **kwargs):
         "next_url": next_url
     }
     return render(request, "account/login.html", my_context)
+
+
+@login_required
+def logout_view(request, *args, **kwargs):
+    logout(request)
+    fancy_message(request, f"You have been logged out.", "success")
+    return redirect("main:home")

@@ -39,7 +39,9 @@
                     <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
                         <i class="bi bi-list text-light fs-5"></i>
                     </button>
-                    <span class="badge bg-secondary fs-5 lh-base">Table: {{ request.user.get_name }}</span>
+                    <span class="d-none d-sm-none d-md-none d-lg-block badge bg-secondary fs-5 lh-base">{{ request.user.get_name }}</span>
+                    <span class="d-none d-sm-none d-md-block d-lg-none badge bg-secondary fs-5 lh-base">{{ request.user.get_name|truncatechars:"20" }}</span>
+                    <span class="d-block d-sm-block d-md-none d-lg-none badge bg-secondary fs-5 lh-base">{{ request.user.get_name|truncatechars:"10" }}</span>
                 </div>
                 <button class="btn btn-primary text-primary border-0 fs-4 bg-primary-subtle position-relative"
                         id="shopping-cart-btn">
@@ -202,6 +204,9 @@
 
         {% elif request.user|has_group:"Manager" %}
             <header class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-primary d-block d-sm-none" id="main-toggler">
+                    <i class="bi bi-list text-light fs-5"></i>
+                </button>
             </header>
         {% endif %}
 

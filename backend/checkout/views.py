@@ -3,7 +3,7 @@ from .models import Order, OrderItem, Extra, Tip
 from core.utils import fancy_message
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
-
+from settings.models import Setting
 
 def full_fill_order(request, user_cart, tips, extras, description, method):
     try:
@@ -52,7 +52,7 @@ def checkout(request, *args, **kwargs):
         user_cart = request.user.cart_user.get_items()
 
         if payment_method == "cash":
-            method = Order.PaymentMethodChoices.CASH
+            method = Setting.PaymentGatewayChoices.CASH
             order_id = full_fill_order(request, user_cart, tips, extras, description, method)
             if order_id:
                 fancy_message(

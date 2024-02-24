@@ -1,6 +1,9 @@
 import os
 
 from .settings import *
+from dotenv import load_dotenv
+
+load_dotenv("./../../../.env")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -20,18 +23,18 @@ STATICFILES_DIRS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME", "campaignMakerDB"),
-        'USER': os.getenv("DB_USER", "campaignMakerAdmin"),
-        'PASSWORD': os.getenv("DB_PASSWORD", "aRZXFK0VVNtW817"),
-        'HOST': "postgres",  # Use the service name from docker-compose.yml
-        'PORT': '5432',
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
+        'PORT': os.environ.get("DB_PORT"),
     }
 }
 
 CACHES = {
     'default': {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        'LOCATION': os.getenv("REDIS_HOST"),  # Use the REDIS_HOST environment variable
+        'LOCATION': os.environ.get("REDIS_HOST"),  # Use the REDIS_HOST environment variable
     }
 }
 
@@ -45,8 +48,8 @@ CHANNEL_LAYERS = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = os.getenv("EMAIL_PORT")
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_password")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_password")

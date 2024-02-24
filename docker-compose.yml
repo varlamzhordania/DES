@@ -9,19 +9,19 @@ services:
       - ./backend/:/home/des/backend
       - ./cert/:/home/des
     command: >
-      bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py load_groups && python manage.py load_palettes && gunicorn -c conf/gunicorn_conf.py core.wsgi:application"
+      bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py load_groups && gunicorn -c conf/gunicorn_conf.py core.wsgi:application --reload"
     expose:
       - "8000"
     depends_on:
       - redis
       - postgres
     env_file:
-      - ./backend/.env
+      - .env
   daphne:
     restart: always
     container_name: daphne
     build:
-      context: .
+      context: ./backend
     volumes:
       - ./backend/:/home/des/backend
     command: >
@@ -31,6 +31,8 @@ services:
     depends_on:
       - redis
       - postgres
+    env_file:
+      - .env
   nginx:
     restart: always
     container_name: nginx
@@ -52,9 +54,9 @@ services:
     container_name: postgres
     restart: always
     ports:
-      - '5432:5432'
+      - '5433:5432'
     env_file:
-      - ./backend/.env
+      - .env
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}

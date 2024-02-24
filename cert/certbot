@@ -1,1 +1,6 @@
 certbot certonly --standalone -d "fastdinerservice.com" -d "www.fastdinerservice.com" --register-unsafely-without-email
+
+
+cp /etc/letsencrypt/live/fastdinerservice.com/privkey.pem /home/DES/cert/privkey.pem
+
+cp /etc/letsencrypt/live/fastdinerservice.com/fullchain.pem /home/DES/cert/fullchain.pem

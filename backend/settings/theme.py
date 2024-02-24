@@ -2,7 +2,7 @@ import subprocess, os
 
 from django.conf import settings
 from django.http import Http404
-
+from django.core.management import call_command
 from .models import Theme
 
 css_folder = os.path.join(settings.STATICFILES_DIRS[0], "assets", "css")
@@ -15,6 +15,7 @@ def update_theme(obj):
 
     update_theme_file(obj)
     compile_scss_to_css(obj)
+    run_collectstatic()
 
 
 def update_theme_file(obj):
@@ -62,6 +63,20 @@ $offcanvas-horizontal-width :600px;
 
 
 def compile_scss_to_css(obj):
-    input_file = styles_file
-    output_file = os.path.join(css_folder, f"{obj.id}-theme.css")
-    subprocess.run(['sass', str(input_file), str(output_file)], check=True, shell=True)
+    try:
+        input_file = styles_file
+        output_file = os.path.join(css_folder, f"{obj.id}-theme.css")
+        subprocess.run(['sass', str(input_file), str(output_file)], check=True, shell=True)
+    except:
+        input_file = styles_file
+        output_file = os.path.join(css_folder, f"{obj.id}-theme.css")
+        subprocess.run(['sass', str(input_file), str(output_file)], check=True)
+        return True
+
+
+def run_collectstatic():
+    try:
+        call_command('collectstatic', '--noinput')
+    except Exception as e:
+        print(e)
+        return False

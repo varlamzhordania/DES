@@ -156,7 +156,7 @@ class UserForm(forms.ModelForm):
         model = get_user_model()
         fields = ['username', 'first_name', "groups", "is_staff", "is_active"]
         widgets = {
-            "groups": forms.SelectMultiple(attrs={"class": "form-select"}),
+            "groups": forms.SelectMultiple(attrs={"class": ""}),
         }
 
 
@@ -184,7 +184,7 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ["username", "password1", "password2", "groups", "is_staff"]
         widgets = {
             "username": forms.TextInput(attrs={"class": "form-control"}),
-            "groups": forms.SelectMultiple(attrs={"class": "form-select"}),
+            "groups": forms.SelectMultiple(attrs={"class": ""}),
         }
 
 

@@ -167,27 +167,24 @@
                                                     </li>
                                                 </ul>
                                                 <hr>
-                                                <div class="hstack gap-2 justify-content-start mt-2">
-                                                    <div>
-                                                        <input type="radio" class="btn-check payment-radio"
-                                                               name="payment"
-                                                               id="express"
-                                                               autocomplete="off" value="express">
-                                                        <label class="btn btn-outline-dark" for="express">
-                                                            <i class="bi bi-credit-card-2-front mx-2"></i>
-                                                            Credit Card
-                                                        </label>
-                                                    </div>
-                                                    <div>
-                                                        <input type="radio" class="btn-check payment-radio"
-                                                               name="payment"
-                                                               id="cash" checked
-                                                               autocomplete="off" value="cash">
-                                                        <label class="btn btn-outline-dark" for="cash">
-                                                            <i class="bi bi-cash-coin mx-2"></i>
-                                                            Cash
-                                                        </label>
-                                                    </div>
+                                                <div class="hstack flex-wrap justify-content-start mt-2">
+                                                    {% for payment_gateway in setting.payment_gateways %}
+                                                        <div class="w-50 p-2">
+                                                            <input type="radio" class="btn-check payment-radio"
+                                                                   name="payment"
+                                                                   id="{{ payment_gateway }}"
+                                                                   autocomplete="off" value="{{ payment_gateway }}">
+                                                            <label class="btn btn-outline-dark w-100 text-capitalize"
+                                                                   for="{{ payment_gateway }}">
+                                                                {{ payment_gateway }}
+                                                            </label>
+                                                        </div>
+                                                    {% empty %}
+                                                        <div>
+                                                            <p>No payment have been configure</p>
+                                                        </div>
+                                                    {% endfor %}
+
                                                 </div>
                                             </div>
                                             <div class="card-footer border-0 bg-transparent">
@@ -223,6 +220,8 @@
     <script src="{% static 'assets/js/index.js' %}" type="module"></script>
 {% elif request.user|has_group:"Manager" %}
     <script src="{% static 'assets/js/dashboard.js' %}" type="module"></script>
+{% else %}
+    <script src="{% static 'assets/js/index.js' %}" type="module"></script>
 {% endif %}
 {% block script %}
 

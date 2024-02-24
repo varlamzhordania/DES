@@ -33,7 +33,8 @@ def login_view(request, *args, **kwargs):
             else:
                 fancy_message(request, "Username and password is required", "error")
         except Exception as e:
-            logging.error(e)
+            fancy_message(request, "Login process failed, please try later", "error")
+
     my_context = {
         "Title": "Login",
         "next_url": next_url

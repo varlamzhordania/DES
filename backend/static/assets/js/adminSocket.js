@@ -125,7 +125,7 @@ class AdminWebSocket {
         table.classList.add("table", "table-hover");
         tableHeader.classList.add("table-dark", "position-sticky", "top-0");
 
-        ["ID", "Table", "Status", "Method", "Payment", "Date"].forEach(headerText => {
+        ["ID", "Table", "Status", "Method", "Payment", "Date", "Action"].forEach(headerText => {
             const th = document.createElement("th");
             th.scope = "row";
             th.textContent = headerText;
@@ -134,12 +134,6 @@ class AdminWebSocket {
 
         data?.forEach(item => {
                 const tr = document.createElement("tr");
-                tr.style.cursor = "pointer";
-                tr.addEventListener("click", () => {
-                        window.location.href = `/dashboard/orders/${item.id}/`;
-                    }
-                )
-                ;
 
                 const idCell = document.createElement("th");
                 idCell.textContent = `#${item?.id}`;
@@ -166,23 +160,25 @@ class AdminWebSocket {
                 dateCell.textContent = `${formatDate(item?.create_at)}`;
                 tr.appendChild(dateCell);
 
+                const actionCell = document.createElement("td");
+                actionCell.innerHTML = `
+                    <a href="${item?.get_absolute_url}" class="btn btn-sm btn-primary text-white">
+                        <i class="bi bi-eye-fill"></i>
+                    </a>`;
+                tr.appendChild(actionCell);
+
                 tableBody.appendChild(tr);
             }
         )
         ;
 
-        tableHeader
-            .appendChild(tableHeaderTr);
+        tableHeader.appendChild(tableHeaderTr);
 
-        table
-            .appendChild(tableHeader);
+        table.appendChild(tableHeader);
 
-        table
-            .appendChild(tableBody);
+        table.appendChild(tableBody);
 
-        this
-            .orderListBody
-            .appendChild(table);
+        this.orderListBody.appendChild(table);
     }
 
     updateUsersList(data) {

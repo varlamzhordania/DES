@@ -7,10 +7,14 @@ from .models import UserRoom
 
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(source="user.username")
+    get_absolute_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
         fields = '__all__'
+
+    def get_get_absolute_url(self, obj):
+        return obj.get_absolute_url()
 
 
 class SeatSerializer(serializers.ModelSerializer):

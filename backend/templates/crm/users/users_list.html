@@ -1,4 +1,5 @@
 {% extends 'index.html' %}
+{% load static %}
 {% block content %}
     <section>
         <div class="card bg-white border-0 shadow-sm">
@@ -62,8 +63,8 @@
                                 <div class="hstack gap-2">
                                     <a href="{{ user.get_absolute_url }}" class="btn btn-sm btn-info text-white"><i
                                             class="bi bi-pencil-fill"></i></a>
-{#                                    <a href="#" class="btn btn-sm btn-danger text-white"><i#}
-{#                                            class="bi bi-trash3-fill"></i></a>#}
+                                    {#                                    <a href="#" class="btn btn-sm btn-danger text-white"><i#}
+                                    {#                                            class="bi bi-trash3-fill"></i></a>#}
                                 </div>
                             </td>
                         </tr>
@@ -99,7 +100,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="post" action="." enctype="multipart/form-data">
-                    {% csrf_token %}
+                        {% csrf_token %}
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="staticBackdropLabel">Add new user</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -110,7 +111,9 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="form-label" for="{{ item.name }}">{{ item.label }}</label>
-                                            {{ item }}
+                                            <div>
+                                                {{ item }}
+                                            </div>
                                             <small class="text-black-50">{{ item.help_text }}</small>
                                         </div>
                                     </div>
@@ -127,4 +130,23 @@
             </div>
         </div>
     </section>
+    <link rel="stylesheet" href="{% static 'assets/lib/nice-select-2/nice-select2.css' %}">
+    <style>
+        .nice-select {
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'assets/lib/nice-select-2/nice-select2.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const options = {
+                searchable: false,
+            }
+            document.getElementById(`id_groups`).removeAttribute("multiple")
+            NiceSelect.bind(document.getElementById(`id_groups`), options);
+            document.getElementById(`id_groups`).classList.add("visually-hidden")
+        });
+    </script>
 {% endblock %}

@@ -141,20 +141,29 @@ document.addEventListener("DOMContentLoaded", () => {
             url = `/api/food-list/`
         const foodData = await getData(url)
         foodListContainer.innerHTML = ``
-
-        foodData.map(food => {
-            FOOD_LIST.push(food)
-            let imageSrc = food.thumbnail ?? DEFAULT_FOOD_URL
-            foodListContainer.innerHTML += `
+        if (foodData.length <= 0) {
+            foodListContainer.classList.add("justify-content-center")
+            foodListContainer.innerHTML = `
+            <div class="col-12 ">
+                   <div class="card bg-transparent border-0">
+                        <div class="card-body d-grid text-center">
+                            <i class="bi bi-search display-1"></i>
+                            <p class="text-black card-text">Could not found any food</p>
+                        </div>
+                    </div>
+            </div>
+            `
+        } else {
+            foodListContainer.classList.remove("justify-content-center")
+            foodData.map(food => {
+                FOOD_LIST.push(food)
+                let imageSrc = food.thumbnail ?? DEFAULT_FOOD_URL
+                foodListContainer.innerHTML += `
             <div class="col">
                     <div class="card card-food h-100 bg-light shadow">
                         <div class="card-img-wrapper">
                              <img src="${imageSrc}" alt="${food.name}" class="card-img"/>
                         </div>
-                        <span class="position-absolute fs-3 text-white bg-white bg-opacity-25 px-2 pt-1 rounded"
-                              style="left:10px;top:10px">
-                            <i class="bi bi-exclamation-circle"></i>
-                        </span>
                         <div class="card-body ">
                             <h3 class="card-title fw-bold">
                                 ${food.name}
@@ -170,10 +179,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </div>
             `
-        })
-        localStorage.setItem("FOOD_LIST", JSON.stringify(FOOD_LIST))
-        btnOrders = document.querySelectorAll('.btn-order')
-        addBtnOrderEvent()
+            })
+            localStorage.setItem("FOOD_LIST", JSON.stringify(FOOD_LIST))
+            btnOrders = document.querySelectorAll('.btn-order')
+            addBtnOrderEvent()
+        }
     }
 
     if (foodListContainer)
@@ -183,9 +193,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const updateCategoryList = async () => {
         const categoryData = await getData('api/category-list/')
         categoryListContainer.innerHTML = ``
-        categoryData.map(category => {
-            let imageSrc = category.image ?? DEFAULT_CATEGORY_URL
-            categoryListContainer.innerHTML += `
+        if (categoryData.length <= 0) {
+            categoryListContainer.classList.add("justify-content-center")
+            categoryListContainer.innerHTML = `
+            <div class="col-12 ">
+                   <div class="card bg-transparent border-0">
+                        <div class="card-body d-grid text-center">
+                            <i class="bi bi-search display-1"></i>
+                            <p class="text-black card-text">Could not found any category</p>
+                        </div>
+                    </div>
+            </div>
+            `
+        } else {
+            categoryListContainer.classList.remove("justify-content-center")
+            categoryData.map(category => {
+                let imageSrc = category.image ?? DEFAULT_CATEGORY_URL
+                categoryListContainer.innerHTML += `
             <swiper-slide>
                 <div class="card card-category overflow-hidden" data-slug="${category.slug}">                      
                     <img src="${imageSrc}" alt="${category.name}" class="card-img h-100 object-fit-cover"/>      
@@ -197,7 +221,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             </swiper-slide>
             `
-        })
+            })
+        }
+
 
         document.querySelectorAll(".card-category").forEach(category => {
             category.addEventListener("click", (e) => {
@@ -420,9 +446,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loadShoppingCartEvent()
 
     }
-    
+
     if (shoppingCartBtn)
-    shoppingCartBtn.addEventListener("click", loadShoppingCartEvent)
+        shoppingCartBtn.addEventListener("click", loadShoppingCartEvent)
 
 
 })

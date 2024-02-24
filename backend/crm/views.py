@@ -70,6 +70,7 @@ def users_detail_view(request, pk, *args, **kwargs):
     form = UserForm(instance=user)
     formset = SeatFormSet(instance=user)
     if request.method == "POST":
+        print(request.POST)
         form = UserForm(instance=user, data=request.POST)
         formset = SeatFormSet(instance=user, data=request.POST)
         if form.is_valid() and formset.is_valid():

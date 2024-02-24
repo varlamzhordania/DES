@@ -1,0 +1,280 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+    <form enctype="multipart/form-data" action="." method="post">
+        {% csrf_token %}
+        <div class="card bg-white shadow-sm border-0">
+            <div class="card-body">
+                <div class="row row-gap-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.user.name }}">{{ form.user.label }}</label>
+                            <div>
+                                {{ form.user }}
+                            </div>
+                            <small class="text-black-50">{{ form.user.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.session_customer.name }}">{{ form.session_customer.label }}</label>
+                            <div>
+                                {{ form.session_customer }}
+                            </div>
+                            <small class="text-black-50">{{ form.session_customer.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label"
+                                   for="{{ form.description.name }}">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            <small class="text-black-50">{{ form.description.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label" for="{{ form.status.name }}">{{ form.status.label }}</label>
+                            {{ form.status }}
+                            <small class="text-black-50">{{ form.status.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label"
+                                   for="{{ form.payment_status.name }}">{{ form.payment_status.label }}</label>
+                            {{ form.payment_status }}
+                            <small class="text-black-50">{{ form.payment_status.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label"
+                                   for="{{ form.tips.name }}">{{ form.tips.label }}</label>
+                            {{ form.tips }}
+                            <small class="text-black-50">{{ form.tips.help_text }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h5 class="fs-5">{{ form.payment_method.label }}</h5>
+                        {% for checkbox in form.payment_method %}
+                            <div class="form-check form-check-inline">
+                                {{ checkbox }}
+                                <label class="form-check-label" for="{{ checkbox.name }}">{{ checkbox.label }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12">
+                        <h5 class="fs-5">{{ form.extras.label }}</h5>
+                        {% for checkbox in form.extras %}
+                            <div class="form-check form-check-inline">
+                                {{ checkbox }}
+                                <label class="form-check-label" for="{{ checkbox.name }}">{{ checkbox.label }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr/>
+                <table class="table " id="formset-container">
+                    {{ formset.management_form }}
+                    <thead>
+                    <tr class="table-dark">
+                        <th scope="row">Food</th>
+                        <th scope="row">Seat</th>
+                        <th scope="row">Quantity</th>
+                        <th scope="row">Price</th>
+                        <th scope="row">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in formset %}
+                        <tr>
+                            {{ item.id }}
+                            <td>
+                                {{ item.food }}
+                            </td>
+                            <td>
+                                {{ item.seats }}
+                            </td>
+                            <td>
+                                {{ item.quantity }}
+                            </td>
+                            <td>
+                                {{ item.price }}
+                            </td>
+                            <td>{{ item.DELETE }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr class="table-transparent">
+                        <td colspan="12">
+                            <button type="button" class="btn btn-sm btn-dark text-white border-0 outline-0"
+                                    id="add-form"><i class="bi bi-plus-circle fs-5"></i> Add more item
+                            </button>
+                        </td>
+                    </tr>
+                    </tfoot>
+
+                </table>
+
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <button class="btn btn-primary text-white float-end" role="button" type="submit">Save changes</button>
+            </div>
+        </div>
+    </form>
+    <link rel="stylesheet" href="{% static 'assets/lib/nice-select-2/nice-select2.css' %}">
+    <style>
+        .nice-select {
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'assets/lib/nice-select-2/nice-select2.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const options = {
+                searchable: true,
+
+            }
+            NiceSelect.bind(document.getElementById(`id_user`), options);
+            document.getElementById(`id_user`).classList.add("visually-hidden")
+
+            let formCount = parseInt(document.getElementById('id_order_items-TOTAL_FORMS').value);
+            for (let i = 0; i < formCount; i++) {
+                const input_food = document.querySelector(`#id_order_items-${i}-food`)
+                const input_seat = document.querySelector(`#id_order_items-${i}-seats`)
+                NiceSelect.bind(input_food, options);
+                NiceSelect.bind(input_seat, options);
+                document.getElementById(`id_order_items-${i}-food`).classList.add("visually-hidden")
+                document.getElementById(`id_order_items-${i}-seats`).classList.add("visually-hidden")
+            }
+
+            window.removeRow = (e) => {
+                const btn = e.currentTarget
+                btn.parentNode.parentNode.remove()
+                document.getElementById('id_order_items-TOTAL_FORMS').value -= 1;
+            }
+
+            document.getElementById('add-form').addEventListener('click', function () {
+
+                let formCount = parseInt(document.getElementById('id_order_items-TOTAL_FORMS').value);
+                const table = document.querySelector("#formset-container")
+                const length = table.querySelectorAll("tbody tr").length
+                const row = table.insertRow(length + 1)
+                row.innerHTML = `
+                <tr>
+                            <input type="hidden" name="order_items-${formCount}-id" id="id_order_items-${formCount}-id">
+                            <td>
+                                <select name="order_items-${formCount}-food" aria-describedby="id_order_items-${formCount}-food_helptext" id="id_order_items-${formCount}-food">
+                                  <option value="" selected="">---------</option>
+                                
+                                  <option value="31">Cheese burger</option>
+                                
+                                  <option value="30">Tomahawk Steak</option>
+                                
+                                  <option value="29">Vegetarian Sushi Roll</option>
+                                
+                                  <option value="28">Coconut Shrimp</option>
+                                
+                                  <option value="27">Shrimp Scampi</option>
+                                
+                                  <option value="26">Caesar Salad</option>
+                                
+                                  <option value="25">Mint Mojito</option>
+                                
+                                  <option value="24">Triple Chocolate Cake</option>
+                                
+                                  <option value="23">Chicken Parmesan</option>
+                                
+                                  <option value="22">Vegetable Dumplings</option>
+                                
+                                  <option value="21">Filet Mignon</option>
+                                
+                                  <option value="20">Vegetarian Burrito Bowl</option>
+                                
+                                  <option value="19">Garlic Butter Shrimp</option>
+                                
+                                  <option value="18">Chicken Pesto Pasta</option>
+                                
+                                  <option value="17">Caprese Salad</option>
+                                
+                                  <option value="16">Lemonade</option>
+                                
+                                  <option value="15">Mango Sorbet</option>
+                                
+                                  <option value="14">Beef Lasagna</option>
+                                
+                                  <option value="13">Crunchy Spring Rolls</option>
+                                
+                                  <option value="12">Ribeye Steak</option>
+                                
+                                  <option value="11">Vegetable Stir-Fry</option>
+                                
+                                  <option value="10">Grilled Shrimp</option>
+                                
+                                  <option value="9">Pesto Linguine</option>
+                                
+                                  <option value="8">Greek Salad</option>
+                                
+                                  <option value="7">Iced Tea</option>
+                                
+                                  <option value="6">Tiramisu</option>
+                                
+                                  <option value="5">Chicken Alfredo</option>
+                                
+                                  <option value="4">Spinach Artichoke Dip</option>
+                                
+                                  <option value="3">Chocolate Brownie</option>
+                                
+                                  <option value="2">Margherita Pizza</option>
+                                
+                                  <option value="1">Mozzarella Sticks</option>
+                                
+                                </select>
+                            </td>
+                            <td>
+                                <select name="order_items-${formCount}-seats" multiple id="id_order_items-${formCount}-seats">
+                                  <option value="18">admin.1</option>
+                                
+                                  <option value="19">admin.2</option>
+                                
+                                  <option value="20">admin.3</option>
+                                
+                                  <option value="25">varlam zhordania.1</option>
+                                
+                                  <option value="26">varlam zhordania.2</option>
+                                
+                                  <option value="27">varlam zhordania.3</option>
+                                
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" name="order_items-${formCount}-quantity" value="1" class="form-control" placeholder="Quantity" min="0" aria-describedby="id_order_items-${formCount}-quantity_helptext" id="id_order_items-${formCount}-quantity">
+                          
+                            </td>
+                            <td>
+                                <input type="number" name="order_items-${formCount}-price" class="form-control" placeholder="Price of Food" step="0.01" aria-describedby="id_order_items-${formCount}-price_helptext" id="id_order_items-${formCount}-price">
+                            </td>
+                            <td>
+                                <button class="btn border-0 outline-0" onclick="removeRow(event)" role="button" type="button">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                `
+
+                NiceSelect.bind(document.getElementById(`id_order_items-${formCount}-seats`), options);
+                NiceSelect.bind(document.getElementById(`id_order_items-${formCount}-food`), options);
+                document.getElementById(`id_order_items-${formCount}-seats`).classList.add("visually-hidden")
+                document.getElementById(`id_order_items-${formCount}-food`).classList.add("visually-hidden")
+
+                document.getElementById('id_order_items-TOTAL_FORMS').value = formCount + 1;
+
+            });
+        });
+    </script>
+{% endblock %}

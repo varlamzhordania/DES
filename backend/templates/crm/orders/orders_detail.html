@@ -3,8 +3,8 @@
 {% block content %}
     <div class="row row-gap-3">
         <section class="col-12">
-            <div class="hstack gap-3 justify-content-between align-items-center">
-                <div class="hstack gap-3">
+            <div class="hstack flex-wrap gap-3 justify-content-between align-items-center">
+                <div class="hstack flex-wrap gap-3">
                     <h3 class="card-title fw-bold text-primary">Order #{{ order.id }}</h3>
                     {% if order.payment_status == "COMPLETED" %}
                         <div class="badge bg-success-subtle text-success fs-6">
@@ -34,20 +34,20 @@
                         </div>
                     {% endif %}
                     <div class="vr"></div>
-                    <div class="badge bg-dark-subtle text-dark fs-6">
-                        <i class="bi bi-calendar-event-fill me-1"></i>
+                    <div class="text-dark fs-6">
                         {{ order.create_at }}
                     </div>
                 </div>
-                <div class="hstack gap-3">
-                    <button class="btn btn-primary text-white">Fulfil</button>
-                    <button class="btn btn-primary text-white">Process</button>
-                    <button class="btn btn-primary text-white">Complete</button>
+                <div class="hstack gap-3 align-items-center justify-content-start">
+                    <a href="{% url 'crm:orders_update' order.id %}" class="link-info icon-link icon-link-hover">
+                        Edit
+                        <i class="bi bi-arrow-right mb-1"></i>
+                    </a>
                 </div>
 
             </div>
         </section>
-        <div class="col col-12 col-md-8 col-lg-9 col-xl-9">
+        <div class="col col-12 col-md-12 col-lg-8 col-xl-9">
             <div class="row row-gap-3">
                 {% if order.description %}
                     <section class="col col-12">
@@ -67,8 +67,8 @@
                             <ul class="list-group list-group-flush overflow-y-auto" style="max-height: 600px">
                                 {% for item in order.order_items.all %}
                                     <li class="list-group-item bg-transparent">
-                                        <div class="row gap-1 py-2">
-                                            <div class="col-4 p-0" style="max-width: 100px">
+                                        <div class="row gap-1 gap-lg-0 row-gap-3 py-2">
+                                            <div class="col-12 col-md-2 col-lg-2 col-xl-2 col-xxl-1  p-0" >
                                                 {% if item.food.thumbnail %}
                                                     <img src="{{ item.food.thumbnail.url }}" alt="{{ item.food.name }}"
                                                          class="card-img">
@@ -77,7 +77,7 @@
                                                          alt="{{ item.food.name }}" class="card-img">
                                                 {% endif %}
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-12 col-md-5 col-lg-5">
                                                 <div class="vstack gap-2">
                                                     <div class="vstack justify-content-start gap-1">
                                                         <h5 class="fw-normal text-dark-emphasis">
@@ -105,21 +105,21 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-2">
+                                            <div class="col-4 col-md-auto col-lg-auto col-xl-2">
 
                                                 <h5 class="fw-normal text-dark-emphasis">
-                                                    ${{ item.food.price }}
+                                                    ${{ item.price }}
                                                 </h5>
 
                                             </div>
-                                            <div class="col-2">
+                                            <div class="col-3 col-md-auto col-lg-auto col-xl-1" >
 
                                                 <h5 class="fw-normal text-dark-emphasis">
                                                     {{ item.quantity }}
                                                 </h5>
 
                                             </div>
-                                            <div class="col-2">
+                                            <div class="col-4 col-md-auto col-lg-auto col-xl-2">
                                                 <h5 class="fw-normal text-primary">
                                                     ${{ item.total_cost }}
                                                 </h5>
@@ -157,7 +157,7 @@
                 </section>
             </div>
         </div>
-        <aside class="col col-12 col-md-4 col-lg-3 col-xl-3">
+        <aside class="col col-12 col-md-12 col-lg-4 col-xl-3">
             <div class="card shadow-sm border-0 bg-white ">
                 <div class="card-body">
                     <h4 class="card-title text-dark fw-bold">Information</h4>
@@ -188,7 +188,7 @@
                         </li>
                         <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
                             <h6 class="card-title fw-bold text-dark-emphasis">Tip:</h6><h6
-                                class="text-black-50 fw-normal">${{ order.tips.amount|default:0 }}{% if order.tips %}({{ order.tips.name }}){% endif %}</h6>
+                                class="text-black-50 fw-normal">${{ order.tips.amount|default:0|floatformat:2 }}{% if order.tips %}({{ order.tips.name }}){% endif %}</h6>
                         </li>
                         <li class="list-group-item bg-transparent hstack align-items-center justify-content-start gap-2 border-0">
                             <h6 class="card-title fw-bold text-dark-emphasis">Total: </h6><h6

@@ -11,7 +11,7 @@ class AdminWebSocket {
     connect() {
         const location = window.location;
         this.wsStart = location.protocol === 'https:' ? 'wss://' : 'ws://';
-        this.endpoint = this.wsStart + location.host + '/admin/';
+        this.endpoint = this.wsStart + location.host + '/ws/admin/';
         this.socket = new WebSocket(this.endpoint);
 
         this.socket.onopen = this.onOpen.bind(this);
@@ -122,7 +122,7 @@ class AdminWebSocket {
         const tableHeader = document.createElement("thead");
         const tableBody = document.createElement("tbody");
         const tableHeaderTr = document.createElement("tr");
-        table.classList.add("table", "table-light", "table-hover");
+        table.classList.add("table", "table-hover");
         tableHeader.classList.add("table-dark", "position-sticky", "top-0");
 
         ["ID", "Table", "Status", "Method", "Payment", "Date"].forEach(headerText => {
@@ -150,15 +150,15 @@ class AdminWebSocket {
                 tr.appendChild(userCell);
 
                 const statusCell = document.createElement("td");
-                statusCell.innerHTML = `<span class="badge bg-primary">${item?.status}</span>`;
+                statusCell.innerHTML = `<span >${item?.status}</span>`;
                 tr.appendChild(statusCell);
 
                 const methodCell = document.createElement("td");
-                methodCell.innerHTML = `<span class="badge bg-info">${item?.payment_method}</span>`;
+                methodCell.innerHTML = `<span >${item?.payment_method}</span>`;
                 tr.appendChild(methodCell);
 
                 const paymentCell = document.createElement("td");
-                paymentCell.innerHTML = `<span class="badge bg-secondary">${item?.payment_status}</span>`
+                paymentCell.innerHTML = `<span >${item?.payment_status}</span>`
 
                 tr.appendChild(paymentCell);
 

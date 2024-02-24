@@ -27,7 +27,7 @@ def full_fill_order(request, user_cart, tips, extras, description, method):
                     order=order,
                     food=cart_item.food,
                     quantity=cart_item.quantity,
-                    price=cart_item.food.price * cart_item.quantity,
+                    price=cart_item.food.price,
                 )
 
                 order_item.seats.set(cart_item.seats.all())

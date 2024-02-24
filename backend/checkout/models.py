@@ -6,7 +6,7 @@ from account.models import Seat
 from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
 from django.shortcuts import reverse
-
+from settings.models import Setting
 
 # Create your models here.
 
@@ -128,10 +128,6 @@ class CartItem(models.Model):
 
 
 class Order(models.Model):
-    class PaymentMethodChoices(models.TextChoices):
-        CASH = "CASH", _("Cash")
-        CREDIT = "CREDIT", _("Credit Card")
-
     class PaymentStatusChoices(models.TextChoices):
         PENDING = "PENDING", _("Pending")
         COMPLETED = "COMPLETED", _("Completed")
@@ -180,8 +176,8 @@ class Order(models.Model):
     payment_method = models.CharField(
         max_length=50,
         verbose_name=_("Payment Method"),
-        choices=PaymentMethodChoices,
-        default=PaymentMethodChoices.CASH
+        choices=Setting.PaymentGatewayChoices,
+        default=Setting.PaymentGatewayChoices.CASH
     )
     payment_status = models.CharField(
         max_length=50,
@@ -213,11 +209,10 @@ class Order(models.Model):
         return f"Order #{self.id} - {self.user.get_name()}"
 
     def get_total_price(self):
-        tip_amount = Decimal(self.tips.amount) if self.tips else Decimal('0')
-        extras_price = sum(Decimal(extra.price) for extra in self.extras.all())
-        items_price = sum(Decimal(item.price) for item in self.order_items.all())
-
-        total_price = tip_amount + extras_price + items_price
+        tip_amount = self.tips.amount if self.tips else 0
+        extras_price = self.extras.aggregate(total=Sum("price"))["total"] or 0
+        subtotal = self.get_subtotal()
+        total_price = tip_amount + extras_price + subtotal
         return total_price
 
     def get_subtotal(self):
@@ -273,4 +268,4 @@ class OrderItem(models.Model):
         return f"{self.quantity} of {self.food}"
 
     def total_cost(self):
-        return Decimal(self.price * self.quantity)
+        return self.price * self.quantity

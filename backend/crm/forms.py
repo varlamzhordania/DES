@@ -6,13 +6,45 @@ from main.models import Food, Category
 from settings.models import Theme, Setting
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import password_validation
-from checkout.models import Tip, Extra, Order
+from checkout.models import Tip, Extra, Order, OrderItem
 
 
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
+        exclude = ["session_id", "create_at", "update_at"]
+        widgets = {
+            "user": forms.Select(attrs={"class": ""}),
+            "session_customer": forms.TextInput(attrs={"class": "form-control", "placeholder": "name of the customer"}),
+            "extras": forms.CheckboxSelectMultiple(attrs={"class": "form-check-input"}),
+            "tips": forms.Select(attrs={"class": "form-select"}),
+            "payment_method": forms.RadioSelect(attrs={"class": "form-check-input"}),
+            "payment_status": forms.Select(attrs={"class": "form-select"}),
+            "status": forms.Select(attrs={"class": "form-select"}),
+            "description": forms.Textarea(attrs={"class": "form-control"}),
+        }
+
+
+class OrderItemForm(forms.ModelForm):
+    class Meta:
+        model = OrderItem
         fields = "__all__"
+        widgets = {
+            "food": forms.Select(attrs={"class": ""}),
+            "seats": forms.SelectMultiple(attrs={"class": "", "multiple": "true"}),
+            "quantity": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Quantity"}),
+            "price": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Price of Food"}),
+        }
+
+
+OrderItemFormSet = forms.inlineformset_factory(
+    Order,
+    OrderItem,
+    form=OrderItemForm,
+    extra=0,
+    can_delete=True,
+    can_delete_extra=False
+)
 
 
 class ExtraForm(forms.ModelForm):

@@ -155,9 +155,9 @@ class Webrtc {
         let endpoint
         let wsStart = location.protocol === 'https:' ? 'wss://' : 'ws://';
         if (id) {
-            endpoint = wsStart + location.host + `/stream/${id}/`;
+            endpoint = wsStart + location.host + `/ws/stream/${id}/`;
         } else {
-            endpoint = wsStart + location.host + '/stream/';
+            endpoint = wsStart + location.host + '/ws/stream/';
         }
         this.websocket = new WebSocket(endpoint);
         console.log(endpoint)

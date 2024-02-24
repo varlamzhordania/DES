@@ -7,11 +7,11 @@ from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from core.utils import fancy_message
 from .forms import UserForm, SeatFormSet, FoodForm, CategoryForm, ThemeForm, SettingForm, CustomUserCreationForm, \
-    TipForm, ExtraForm, OrderForm
+    TipForm, ExtraForm, OrderForm, OrderItemFormSet
 from settings.models import Theme, Setting
 from django.db import transaction
 from django.views.decorators.http import require_POST
-from checkout.models import Extra, Tip, Order
+from checkout.models import Extra, Tip, Order, OrderItem
 
 
 # Create your views here.
@@ -72,7 +72,6 @@ def users_detail_view(request, pk, *args, **kwargs):
     if request.method == "POST":
         form = UserForm(instance=user, data=request.POST)
         formset = SeatFormSet(instance=user, data=request.POST)
-        print(request.POST)
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
@@ -132,22 +131,71 @@ def orders_list_view(request, *args, **kwargs):
 @user_passes_test(is_manager_user)
 def orders_detail_view(request, pk, *args, **kwargs):
     order = get_object_or_404(Order, id=pk)
-    form = OrderForm(instance=order)
-    if request.method == "POST":
-        form = OrderForm(instance=order, data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            fancy_message(request, "Changes saved successfully", level="success")
-            return redirect(".")
-        else:
-            fancy_message(request, form.errors, level="error")
-
     my_context = {
         "Title": order.id,
         "order": order,
-        "form": form,
     }
     return render(request, "crm/orders/orders_detail.html", my_context)
+
+
+@login_required
+@user_passes_test(is_manager_user)
+def orders_update_view(request, pk, *args, **kwargs):
+    order = get_object_or_404(Order, id=pk)
+    form = OrderForm(instance=order)
+    formset = OrderItemFormSet(instance=order)
+    if request.method == "POST":
+        form = OrderForm(instance=order, data=request.POST, files=request.FILES)
+        formset = OrderItemFormSet(instance=order, data=request.POST, files=request.FILES)
+        if form.is_valid() and formset.is_valid():
+            form_obj = form.save()
+            formset.save()
+            fancy_message(request, "Changes saved successfully", level="success")
+            return redirect("crm:orders_detail", pk=form_obj.id)
+        else:
+            fancy_message(request, form.errors, level="error")
+            fancy_message(request, formset.errors, level="error")
+
+    my_context = {
+        "Title": "Create Order",
+        "form": form,
+        "formset": formset
+    }
+    return render(request, "crm/orders/orders_create.html", my_context)
+
+
+@login_required
+@user_passes_test(is_manager_user)
+def orders_create_view(request, *args, **kwargs):
+    form = OrderForm()
+    formset = OrderItemFormSet()
+    if request.method == "POST":
+        form = OrderForm(data=request.POST, files=request.FILES)
+        formset = OrderItemFormSet(data=request.POST, files=request.FILES)
+
+        if form.is_valid() and formset.is_valid():
+            form_obj = form.save()
+            formset_obj = formset.save(commit=False)
+
+            for index, item in enumerate(formset_obj):
+                item.order = form_obj
+                item.save()
+
+                seats = request.POST.getlist(f'order_items-{index}-seats')
+                item.seats.set(seats)
+
+            fancy_message(request, "Order successfully created", level="success")
+            return redirect("crm:orders_detail", pk=form_obj.id)
+        else:
+            fancy_message(request, form.errors, level="error")
+            fancy_message(request, formset.errors, level="error")
+
+    my_context = {
+        "Title": "Create Order",
+        "form": form,
+        "formset": formset
+    }
+    return render(request, "crm/orders/orders_create.html", my_context)
 
 
 @login_required

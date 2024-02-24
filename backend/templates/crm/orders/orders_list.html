@@ -6,9 +6,9 @@
             <div class="card-header border-0 bg-transparent">
                 <div class="hstack justify-content-between align-items-center">
                     <h2 class="card-title mb-0">Orders</h2>
-{#                    <button class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modal-order">#}
-{#                        Create new order#}
-{#                    </button>#}
+                    <a href="{% url "crm:orders_create" %}" class="btn btn-primary text-white">
+                        Create new order
+                    </a>
                 </div>
             </div>
             <div class="card-body table-responsive">
@@ -41,6 +41,8 @@
                                 <div class="hstack gap-2">
                                     <a href="{{ order.get_absolute_url }}" class="btn btn-sm btn-primary text-white"><i
                                             class="bi bi-eye-fill"></i></a>
+                                    <a href="{% url "crm:orders_update" order.id %}" class="btn btn-sm btn-info text-white"><i
+                                            class="bi bi-pencil-fill"></i></a>
                                 </div>
                             </td>
                         </tr>

@@ -1,18 +1,83 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block content %}
-    <div class="row">
-        <section class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-9">
-            <div class="card shadow-sm border-0 bg-white">
-                <div class="card-header bg-dark text-white px-2 border-0">
-                    <h3 class="card-title mb-0 fw-bold">Recent orders</h3>
+    <style>
+        .tray-food-bg::after {
+            background: rgba(0, 0, 0, 0.6);
+        }
+    </style>
+    <div class="row row-gap-4">
+        <section class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <a href="{% url 'crm:orders_create' %}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 bg-white" role="button">
+                    <div class="card-body">
+                        <div class="vstack justify-content-center align-items-center text-center">
+                            <i class="bi bi-cart-plus display-1 text-primary"></i>
+                            <h4 class="fw-bold">Add new order</h4>
+                            <p class="text-black-50">
+                                you want to add a new order for customer ? click and add a customized order
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body table-responsive p-0 " id="order-list-body" style="height: 40vh">
+            </a>
+        </section>
+        <section class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <a href="#" class="text-decoration-none">
+                <div class="card shadow-sm border-0 bg-white" role="button">
+                    <div class="card-body">
+                        <div class="vstack justify-content-center align-items-center text-center">
+                            <i class="bi bi-person-circle display-1 text-primary"></i>
+                            <h4 class="fw-bold">Check customer</h4>
+                            <p class="text-black-50">
+                                want to know activity of your customer ? click and see customer stats
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </section>
+        <section class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <a href="{% url 'crm:foods_list' %}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 bg-white" role="button">
+                    <div class="card-body">
+                        <div class="vstack justify-content-center align-items-center text-center">
+                            <i class="bi bi-egg display-1 text-primary"></i>
+                            <h4 class="fw-bold">Add new food</h4>
+                            <p class="text-black-50">
+                                not enough food on your list ? click and expand your restaurant menu 
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </section>
+        <section class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3">
+            <a href="{% url 'crm:dashboard_settings' %}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 bg-white" role="button">
+                    <div class="card-body">
+                        <div class="vstack justify-content-center align-items-center text-center">
+                            <i class="bi bi-gear display-1 text-primary"></i>
+                            <h4 class="fw-bold">Configure website</h4>
+                            <p class="text-black-50">
+                                customize your website how ever you like, click and start your customization
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </section>
+        <section class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-9">
+            <div class="card shadow-sm border-0 bg-white">
+                <div class="card-header bg-transparent border-0">
+                    <h3 class="card-title mb-0 ">Active orders</h3>
+                </div>
+                <div class="card-body table-responsive" id="order-list-body" style="height: 40vh">
                     {% include 'loader.html' %}
                 </div>
             </div>
         </section>
-        <section class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3">
+        <section class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
             <div class="card shadow-sm border-0 bg-white h-100">
                 <div class="card-body overflow-y-auto" id="room-list-body" style="max-height: 45vh">
                     {% include 'loader.html' %}

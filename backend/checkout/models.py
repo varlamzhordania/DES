@@ -268,4 +268,4 @@ class OrderItem(models.Model):
         return f"{self.quantity} of {self.food}"
 
     def total_cost(self):
-        return self.price * self.quantity
+        return (self.price or 0) * self.quantity

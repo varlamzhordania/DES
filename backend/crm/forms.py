@@ -36,6 +36,16 @@ class OrderItemForm(forms.ModelForm):
             "price": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Price of Food"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk is not None:
+            instance_user_id = self.instance.order.user.pk
+            new_instance_user_id = self.data.get("user")
+            if new_instance_user_id and instance_user_id != new_instance_user_id:
+                self.fields.get("seats").queryset = Seat.objects.filter(user_id=new_instance_user_id)
+            else:
+                self.fields.get("seats").queryset = Seat.objects.filter(user_id=instance_user_id)
+
 
 OrderItemFormSet = forms.inlineformset_factory(
     Order,

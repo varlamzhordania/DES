@@ -3,6 +3,7 @@ from .views import dashboard_view, support_view, users_list_view, users_detail_v
     categories_list_view, categories_detail_view, settings_view, settings_theme_view, food_delete_view, \
     category_delete_view, tips_list_view, tips_detail_view, tips_delete_view, extras_list_view, extras_delete_view, \
     extras_detail_view, orders_list_view, orders_detail_view, orders_create_view, orders_update_view
+from .api import UserSeatsView
 
 app_name = 'crm'
 
@@ -28,5 +29,6 @@ urlpatterns = [
     path('dashboard/extras/delete/', extras_delete_view, name='extras_delete'),
     path('dashboard/settings/', settings_view, name='dashboard_settings'),
     path('dashboard/settings/theme/', settings_theme_view, name='dashboard_settings_theme'),
-    path('dashboard/support/<int:pk>/', support_view, name='dashboard_support')
+    path('dashboard/support/<int:pk>/', support_view, name='dashboard_support'),
+    path("api/crm/seats/", UserSeatsView.as_view(), name="seats_list"),
 ]

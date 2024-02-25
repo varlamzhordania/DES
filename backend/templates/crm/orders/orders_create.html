@@ -18,7 +18,8 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <label class="form-label" for="{{ form.session_customer.name }}">{{ form.session_customer.label }}</label>
+                            <label class="form-label"
+                                   for="{{ form.session_customer.name }}">{{ form.session_customer.label }}</label>
                             <div>
                                 {{ form.session_customer }}
                             </div>
@@ -110,7 +111,7 @@
                     <tfoot>
                     <tr class="table-transparent">
                         <td colspan="12">
-                            <button type="button" class="btn btn-sm btn-dark text-white border-0 outline-0"
+                            <button type="button" disabled class="btn btn-sm btn-dark text-white border-0 outline-0"
                                     id="add-form"><i class="bi bi-plus-circle fs-5"></i> Add more item
                             </button>
                         </td>
@@ -134,34 +135,78 @@
 {% endblock %}
 {% block script %}
     <script src="{% static 'assets/lib/nice-select-2/nice-select2.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const options = {
-                searchable: true,
+    <script type="module">
+        import {getData} from "{% static "assets/js/utils.js" %}";
 
-            }
+        document.addEventListener('DOMContentLoaded', async function () {
+            const userSelectInput = document.querySelector("#id_user")
+            const options = {searchable: true,}
+            let formCount = parseInt(document.getElementById('id_order_items-TOTAL_FORMS').value);
+            let foodOptions = []
+            let seatOptions = []
+            let NiceSelectFood = {}
+            let NiceSelectSeat = {}
+            foodOptions = await getData("/api/food-list/")
+            if (userSelectInput.value.trim !== "" || userSelectInput.value.length > 0)
+                seatOptions = await getData(`/api/crm/seats/?user=${userSelectInput.value}`)
+
             NiceSelect.bind(document.getElementById(`id_user`), options);
             document.getElementById(`id_user`).classList.add("visually-hidden")
 
-            let formCount = parseInt(document.getElementById('id_order_items-TOTAL_FORMS').value);
-            for (let i = 0; i < formCount; i++) {
-                const input_food = document.querySelector(`#id_order_items-${i}-food`)
-                const input_seat = document.querySelector(`#id_order_items-${i}-seats`)
-                NiceSelect.bind(input_food, options);
-                NiceSelect.bind(input_seat, options);
-                document.getElementById(`id_order_items-${i}-food`).classList.add("visually-hidden")
-                document.getElementById(`id_order_items-${i}-seats`).classList.add("visually-hidden")
+
+            const handleIterateSelect = (data = null) => {
+                for (let i = 1; i <= formCount; i++) {
+                    const input_food = document.querySelector(`#id_order_items-${i-1}-food`)
+                    const input_seat = document.querySelector(`#id_order_items-${i-1}-seats`)
+                    if (!NiceSelectFood[i] && !NiceSelectSeat[i]) {
+                        NiceSelectSeat[i] = NiceSelect.bind(input_seat, options);
+                        NiceSelectFood[i] = NiceSelect.bind(input_food, options);
+                        input_food.classList.add("visually-hidden")
+                        input_seat.classList.add("visually-hidden")
+                    }
+                    if (data) {
+                        input_seat.innerHTML = ``
+                        input_seat.innerHTML = `${data?.map(seat => `<option value="${seat?.id}">${seat?.name}</option>`)}`
+                        NiceSelectSeat[i].update()
+                        NiceSelectSeat[i].dropdown.classList.remove("visually-hidden")
+                    }
+
+                }
             }
+            handleIterateSelect()
+
+
+            const handleValidateAddSeat = (value) => {
+                const btn = document.querySelector("#add-form")
+                if (value.trim === "" || value.length === 0 || value === null || value === undefined) {
+                    btn.setAttribute("disabled", true)
+                } else {
+                    btn.removeAttribute("disabled")
+                }
+            }
+
+            handleValidateAddSeat(userSelectInput.value)
 
             window.removeRow = (e) => {
                 const btn = e.currentTarget
                 btn.parentNode.parentNode.remove()
                 document.getElementById('id_order_items-TOTAL_FORMS').value -= 1;
+                formCount = parseInt(document.getElementById('id_order_items-TOTAL_FORMS').value);
             }
+
+
+            userSelectInput.addEventListener("change", async (e) => {
+                const id = e.currentTarget.value
+                handleValidateAddSeat(id)
+                seatOptions = await getData(`/api/crm/seats/?user=${id}`)
+
+                handleIterateSelect(seatOptions)
+
+
+            })
 
             document.getElementById('add-form').addEventListener('click', function () {
 
-                let formCount = parseInt(document.getElementById('id_order_items-TOTAL_FORMS').value);
                 const table = document.querySelector("#formset-container")
                 const length = table.querySelectorAll("tbody tr").length
                 const row = table.insertRow(length + 1)
@@ -171,85 +216,12 @@
                             <td>
                                 <select name="order_items-${formCount}-food" aria-describedby="id_order_items-${formCount}-food_helptext" id="id_order_items-${formCount}-food">
                                   <option value="" selected="">---------</option>
-                                
-                                  <option value="31">Cheese burger</option>
-                                
-                                  <option value="30">Tomahawk Steak</option>
-                                
-                                  <option value="29">Vegetarian Sushi Roll</option>
-                                
-                                  <option value="28">Coconut Shrimp</option>
-                                
-                                  <option value="27">Shrimp Scampi</option>
-                                
-                                  <option value="26">Caesar Salad</option>
-                                
-                                  <option value="25">Mint Mojito</option>
-                                
-                                  <option value="24">Triple Chocolate Cake</option>
-                                
-                                  <option value="23">Chicken Parmesan</option>
-                                
-                                  <option value="22">Vegetable Dumplings</option>
-                                
-                                  <option value="21">Filet Mignon</option>
-                                
-                                  <option value="20">Vegetarian Burrito Bowl</option>
-                                
-                                  <option value="19">Garlic Butter Shrimp</option>
-                                
-                                  <option value="18">Chicken Pesto Pasta</option>
-                                
-                                  <option value="17">Caprese Salad</option>
-                                
-                                  <option value="16">Lemonade</option>
-                                
-                                  <option value="15">Mango Sorbet</option>
-                                
-                                  <option value="14">Beef Lasagna</option>
-                                
-                                  <option value="13">Crunchy Spring Rolls</option>
-                                
-                                  <option value="12">Ribeye Steak</option>
-                                
-                                  <option value="11">Vegetable Stir-Fry</option>
-                                
-                                  <option value="10">Grilled Shrimp</option>
-                                
-                                  <option value="9">Pesto Linguine</option>
-                                
-                                  <option value="8">Greek Salad</option>
-                                
-                                  <option value="7">Iced Tea</option>
-                                
-                                  <option value="6">Tiramisu</option>
-                                
-                                  <option value="5">Chicken Alfredo</option>
-                                
-                                  <option value="4">Spinach Artichoke Dip</option>
-                                
-                                  <option value="3">Chocolate Brownie</option>
-                                
-                                  <option value="2">Margherita Pizza</option>
-                                
-                                  <option value="1">Mozzarella Sticks</option>
-                                
+                                   ${foodOptions?.map(food => `<option value="${food?.id}">${food?.name}</option>`)}
                                 </select>
                             </td>
                             <td>
                                 <select name="order_items-${formCount}-seats" multiple id="id_order_items-${formCount}-seats">
-                                  <option value="18">admin.1</option>
-                                
-                                  <option value="19">admin.2</option>
-                                
-                                  <option value="20">admin.3</option>
-                                
-                                  <option value="25">varlam zhordania.1</option>
-                                
-                                  <option value="26">varlam zhordania.2</option>
-                                
-                                  <option value="27">varlam zhordania.3</option>
-                                
+                                    ${seatOptions?.map(seat => `<option value="${seat?.id}">${seat?.name}</option>`)}
                                 </select>
                             </td>
                             <td>
@@ -267,12 +239,16 @@
                         </tr>
                 `
 
-                NiceSelect.bind(document.getElementById(`id_order_items-${formCount}-seats`), options);
-                NiceSelect.bind(document.getElementById(`id_order_items-${formCount}-food`), options);
+                const selectSeat = NiceSelect.bind(document.getElementById(`id_order_items-${formCount}-seats`), options);
+                const selectFood = NiceSelect.bind(document.getElementById(`id_order_items-${formCount}-food`), options);
+                NiceSelectSeat[formCount+1] = selectSeat
+                NiceSelectFood[formCount+1] = selectFood
+                console.log(NiceSelectSeat)
                 document.getElementById(`id_order_items-${formCount}-seats`).classList.add("visually-hidden")
                 document.getElementById(`id_order_items-${formCount}-food`).classList.add("visually-hidden")
 
                 document.getElementById('id_order_items-TOTAL_FORMS').value = formCount + 1;
+                formCount = parseInt(document.getElementById('id_order_items-TOTAL_FORMS').value);
 
             });
         });

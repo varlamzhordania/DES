@@ -41,3 +41,14 @@ export const toast = (text, duration = 5000, type = "info") => {
         },
     }).showToast();
 }
+
+export const getData = async (url) => {
+    const response = await fetch(url, {
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        method: "get"
+    })
+    return await response.json()
+}

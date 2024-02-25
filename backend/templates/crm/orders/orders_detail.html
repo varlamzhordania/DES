@@ -108,7 +108,7 @@
                                             <div class="col-4 col-md-auto col-lg-auto col-xl-2">
 
                                                 <h5 class="fw-normal text-dark-emphasis">
-                                                    ${{ item.price }}
+                                                    ${{ item.price|default:0 }}
                                                 </h5>
 
                                             </div>

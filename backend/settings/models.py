@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from multiselectfield import MultiSelectField
+from .validators import image_validator
 
 
 class CustomMultiSelectField(MultiSelectField):
@@ -56,17 +57,19 @@ class Setting(models.Model):
         null=False,
         help_text=_("Company Name will be displayed on the home")
     )
-    logo = models.ImageField(
+    logo = models.FileField(
         upload_to=upload_logo,
         verbose_name=_('Logo'),
         help_text=_("it will be displayed for places that have big space"),
+        validators=[image_validator],
         blank=True,
         null=True
     )
-    logo_mini = models.ImageField(
+    logo_mini = models.FileField(
         upload_to=upload_logo,
         verbose_name=_('Logo mini'),
         help_text=_("small size of logo, for sidebar"),
+        validators=[image_validator],
         blank=True,
         null=True
     )

@@ -27,9 +27,8 @@ $offcanvas-horizontal-width: 600px;
 
 .form-control:focus {
   outline: none;
-  border-color: rgba($dark, 1);
+  border-color: rgba($primary, 1);
   box-shadow: none;
-  background-color: $gray-200;
 }
 
 

@@ -1,5 +1,5 @@
 import ShoppingCart from "./cart.js"
-import {FOOD_LIST, EXTRA_LIST, TIP_LIST} from "./constant.js";
+import {EXTRA_LIST, FOOD_LIST, TIP_LIST} from "./constant.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,7 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const shoppingCartBtn = document.querySelector("#shopping-cart-btn")
     const shoppingCartBody = document.querySelector("#shoppingCartBody")
     const btnCheckout = document.querySelector("#btn-checkout")
+    const searchInput = document.querySelector("#search-input")
+    const minSearchLength = 3;
     const myCart = new ShoppingCart();
+    let abortController = new AbortController();
     const DEFAULT_FOOD_URL = '/static/assets/image/food-default.jpg'
     const DEFAULT_CATEGORY_URL = 'static/assets/image/category-default.jpg'
     let btnOrders;
@@ -24,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let extraSelected = []
     let tipSelected = {}
     let orderModal;
+    let debounceTimer;
 
     const triggerToast = (item) => {
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(item)
@@ -33,13 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let toast of toasts) {
         triggerToast(toast)
     }
-    const getData = async (url) => {
+    const getData = async (url, signal = abortController.signal) => {
         const response = await fetch(url, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
             },
-            method: "get"
+            method: "get",
+            signal: signal
         })
         return await response.json()
     }
@@ -47,6 +52,33 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.querySelector("#shopping-cart-canvas"))
         shoppingCartCanvas = new bootstrap.Offcanvas('#shopping-cart-canvas')
 
+
+    if (searchInput) {
+        searchInput.addEventListener("input", async (e) => {
+            const searchTerm = e.currentTarget.value;
+
+            // Check if the search term meets the minimum length requirement
+            if (searchTerm.length < minSearchLength) {
+                abortController.abort();
+                updateFoodListUI(FOOD_LIST)
+                return;
+            }
+
+            abortController.abort();
+            abortController = new AbortController()
+
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+
+                const encodedSearchTerm = encodeURIComponent(searchTerm);
+                const url = `/api/food-list/?search=${encodedSearchTerm}`;
+                const foodData = await getData(url);
+                updateFoodListUI(foodData);
+            }, 300);
+
+        });
+    }
 
     const handleExtrasAmount = () => {
         return extraSelected.reduce((total, item) => parseFloat(item.price) + total, parseFloat('0.00'))
@@ -133,6 +165,67 @@ document.addEventListener("DOMContentLoaded", () => {
         sidebarAside.appendChild(backdrop)
 
 
+    const updateFoodListUI = (foodData, update = false) => {
+        foodListContainer.innerHTML = "";
+
+        if (foodData.length <= 0) {
+            foodListContainer.classList.add("justify-content-center");
+            foodListContainer.innerHTML = `
+            <div class="col-12">
+                <div class="card bg-transparent border-0">
+                    <div class="card-body d-grid text-center">
+                        <i class="bi bi-search display-1"></i>
+                        <p class="text-black card-text">Could not find any food</p>
+                    </div>
+                </div>
+            </div>
+            `;
+        } else {
+            foodListContainer.classList.remove("justify-content-center");
+            foodData.map(food => {
+                if (update) {
+                    const existsInList = FOOD_LIST.some(item => item.id === food.id);
+
+                    if (!existsInList) {
+                        FOOD_LIST.push(food);
+                    }
+                }
+                let imageSrc = food.thumbnail ?? DEFAULT_FOOD_URL
+                foodListContainer.innerHTML += `
+                <div class="col">
+                    <div class="card card-food h-100 bg-light shadow">
+                        <div class="row g-0">
+                            <div class="col-4 col-md-12">
+                                <div class="card-img-wrapper">
+                                     <img src="${imageSrc}" alt="${food.name}" class="card-img"/>
+                                </div>
+                            </div>
+                            <div class="col-8 col-md-12">
+                                <div class="card-body pb-0">
+                                    <h3 class="card-title fw-bold">
+                                        ${food.name}
+                                    </h3>
+                                </div>
+                                <div class="card-footer bg-transparent border-0 d-md-flex d-grid justify-content-md-between align-items-center">     
+                                    <h4 class="card-title text-primary fw-normal">$${food.price}</h4>
+                                    <button class="btn btn-sm btn-secondary text-white btn-order" data-id="${food.id}">
+                                        <i class="bi bi-cart-plus me-2"></i>
+                                        ORDER
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            })
+            btnOrders = document.querySelectorAll('.btn-order');
+            addBtnOrderEvent();
+            if (update) {
+                localStorage.setItem("FOOD_LIST", JSON.stringify(FOOD_LIST))
+            }
+        }
+    };
     const updateFoodList = async (category) => {
         let url;
         if (category)
@@ -140,51 +233,10 @@ document.addEventListener("DOMContentLoaded", () => {
         else
             url = `/api/food-list/`
         const foodData = await getData(url)
-        foodListContainer.innerHTML = ``
-        if (foodData.length <= 0) {
-            foodListContainer.classList.add("justify-content-center")
-            foodListContainer.innerHTML = `
-            <div class="col-12 ">
-                   <div class="card bg-transparent border-0">
-                        <div class="card-body d-grid text-center">
-                            <i class="bi bi-search display-1"></i>
-                            <p class="text-black card-text">Could not found any food</p>
-                        </div>
-                    </div>
-            </div>
-            `
-        } else {
-            foodListContainer.classList.remove("justify-content-center")
-            foodData.map(food => {
-                FOOD_LIST.push(food)
-                let imageSrc = food.thumbnail ?? DEFAULT_FOOD_URL
-                foodListContainer.innerHTML += `
-            <div class="col">
-                    <div class="card card-food h-100 bg-light shadow">
-                        <div class="card-img-wrapper">
-                             <img src="${imageSrc}" alt="${food.name}" class="card-img"/>
-                        </div>
-                        <div class="card-body ">
-                            <h3 class="card-title fw-bold">
-                                ${food.name}
-                            </h3>
-                        </div>
-                        <div class="card-footer bg-transparent border-0 d-md-flex d-grid justify-content-md-between align-items-center">     
-                            <h4 class="card-title text-primary fw-normal">$${food.price}</h4>
-                            <button class="btn btn-sm btn-secondary text-white btn-order" data-id="${food.id}">
-                                <i class="bi bi-cart-plus me-2"></i>
-                                ORDER
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `
-            })
-            localStorage.setItem("FOOD_LIST", JSON.stringify(FOOD_LIST))
-            btnOrders = document.querySelectorAll('.btn-order')
-            addBtnOrderEvent()
-        }
+        updateFoodListUI(foodData, true)
+
     }
+
 
     if (foodListContainer)
         updateFoodList(categoryParam)
@@ -405,8 +457,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         ${seatsWrapper.outerHTML}  
                         </div>
                         <div class="d-flex justify-content-start align-items-center align-self-end w-100 gap-2">
-                            <button type="button" class="btn btn-lg  btn-dark w-75" onclick="openShoppingCartInModal()"><i class="bi bi-cart mx-2"></i> Order List</button>   
-                            <button type="button" class="btn btn-lg  btn-outline-dark w-25" data-bs-dismiss="modal" aria-label="Close">Close</button> 
+                            <button type="button" class="btn btn-lg  btn-dark w-75" onclick="openShoppingCartInModal()"><i class="bi bi-cart mx-2"></i> Finish order</button>   
+                            <button type="button" class="btn btn-lg  btn-outline-dark w-25" data-bs-dismiss="modal" aria-label="Close">Add more</button> 
                         </div>                        
                           
                         </div>
@@ -447,6 +499,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+    window.onWindowResize = (mediaQuery, callback) => {
+        const mediaQueryList = window.matchMedia(mediaQuery);
+
+        const handleWindowSizeChange = (mediaQueryList) => {
+            if (mediaQueryList.matches) {
+                callback();
+            }
+        };
+        handleWindowSizeChange(mediaQueryList);
+
+        const resizeHandler = () => handleWindowSizeChange(mediaQueryList);
+        window.addEventListener('resize', resizeHandler);
+
+        return {
+            removeListener: () => {
+                window.removeEventListener('resize', resizeHandler);
+            },
+        };
+    }
+
     if (shoppingCartBtn)
         shoppingCartBtn.addEventListener("click", loadShoppingCartEvent)
 
@@ -473,3 +545,5 @@ const chairIcon = `
     <path fill="currentColor" d="M6.25 15.991c-.502-.02-.806-.088-1.014-.315c-.297-.324-.258-.774-.18-1.675c.055-.65.181-1.088.467-1.415C6.035 12 6.858 12 8.505 12h6.99c1.647 0 2.47 0 2.982.586c.286.326.412.764.468 1.415c.077.9.116 1.351-.181 1.675c-.208.227-.512.295-1.014.315V21a.75.75 0 1 1-1.5 0v-5h-8.5v5a.75.75 0 1 1-1.5 0z"/>
 </svg>
 `
+
+

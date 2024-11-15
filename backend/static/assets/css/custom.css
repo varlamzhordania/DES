@@ -11862,9 +11862,8 @@ textarea.form-control-lg {
 
 .form-control:focus {
   outline: none;
-  border-color: #2e384d;
+  border-color: #ff6e00;
   box-shadow: none;
-  background-color: #e9ecef;
 }
 
 /*# sourceMappingURL=custom.css.map */

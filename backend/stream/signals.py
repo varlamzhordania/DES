@@ -12,3 +12,4 @@ def send_room_list_signal(sender, instance, created, **kwargs):
     transaction.on_commit(
         lambda: async_to_sync(channel_layer.group_send)('admin_room', {'type': 'send.room_list', 'dict_data': {}})
     )
+

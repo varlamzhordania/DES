@@ -1,0 +1,68 @@
+/* Driver.js */
+.driver-popover {
+    background: #ffffff;
+}
+
+.driver-popover-title {
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: bold;
+    color: var(--bs-primary);
+}
+
+.driver-popover-description {
+    font-size: 13px;
+    line-height: 18px;
+    text-align: start;
+    color: var(--bs-gray-700);
+}
+
+.driver-popover-progress-text {
+    font-size: 12px;
+    color: var(--bs-gray-500);
+}
+
+.driver-popover-navigation-btns {
+    gap: 5px;
+}
+
+.driver-popover-navigation-btns button {
+    padding: 8px 13px !important;
+    font-weight: var(--bs-body-font-weight) !important;
+    border-radius: var(--bs-border-radius) !important;
+    text-shadow: none !important;
+    transition: all 200ms ease-in-out;
+}
+
+.driver-popover-prev-btn {
+    box-shadow: none !important;
+    border: 1px solid var(--bs-gray-300) !important;
+    color: var(--bs-gray-600) !important;
+    background-color: transparent !important;
+}
+
+.driver-popover-prev-btn.active,
+.driver-popover-prev-btn:hover,
+.driver-popover-prev-btn:focus {
+    border: 1px solid var(--bs-gray-400) !important;
+    color: var(--bs-gray-700) !important;
+    background: var(--bs-gray-300) !important;
+}
+
+.driver-popover-next-btn {
+    box-shadow: var(--bs-box-shadow) !important;
+    border: none !important;
+    color: var(--bs-body-bg) !important;
+    background-color: var(--bs-primary) !important;
+}
+
+.driver-popover-next-btn.active,
+.driver-popover-next-btn:hover,
+.driver-popover-next-btn:focus {
+    box-shadow: none !important;
+    background: var(--bs-primary) !important;
+}
+
+:not(body):has(> .driver-active-element){
+    overflow: unset !important;
+}

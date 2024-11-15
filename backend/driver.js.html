@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Driver Js</title>
+	</head>
+	<body>
+		<style>
+			/* Driver.js */
+			.driver-popover {
+				background: #ffffff;
+			}
+
+			.driver-popover-title {
+				font-size: 15px;
+				line-height: 18px;
+				font-weight: bold;
+				color: var(--text-primary);
+			}
+
+			.driver-popover-description {
+				font-size: 13px;
+				line-height: 18px;
+				text-align: start;
+				color: var(--grey-700);
+			}
+
+			.driver-popover-progress-text {
+				font-size: 12px;
+				color: var(--grey-500);
+			}
+
+			.driver-popover-navigation-btns {
+				gap: 5px;
+			}
+
+			.driver-popover-navigation-btns button {
+				padding: 8px 13px !important;
+				font-weight: var(--font-medium) !important;
+				border-radius: var(--border-radius) !important;
+				text-shadow: none !important;
+				transition: all 200ms ease-in-out;
+			}
+
+			.driver-popover-prev-btn {
+				box-shadow: none !important;
+				border: 1px solid var(--grey-300) !important;
+				color: var(--grey-600) !important;
+				background-color: transparent !important;
+			}
+
+			.driver-popover-prev-btn.active,
+			.driver-popover-prev-btn:hover,
+			.driver-popover-prev-btn:focus {
+				border: 1px solid var(--grey-400) !important;
+				color: var(--grey-700) !important;
+				background: var(--grey-300) !important;
+			}
+
+			.driver-popover-next-btn {
+				box-shadow: var(--shadow-info) !important;
+				border: none !important;
+				color: var(--common-white) !important;
+				background-color: var(--info-main) !important;
+			}
+
+			.driver-popover-next-btn.active,
+			.driver-popover-next-btn:hover,
+			.driver-popover-next-btn:focus {
+				box-shadow: none !important;
+				background: var(--info-dark) !important;
+			}
+
+			.btn-click-me.pulsate {
+				animation: 3s ease-in-out 0s infinite normal none running pulsate;
+				transform-origin: center center;
+			}
+
+			@keyframes pulsate {
+				0% {
+					box-shadow:
+						0 0 0 0 rgba(2, 156, 253, 0.7),
+						0 0 0 0 rgba(2, 156, 253, 0.4);
+				}
+				50% {
+					box-shadow:
+						0 0 0 20px rgba(2, 156, 253, 0),
+						0 0 0 40px rgba(2, 156, 253, 0);
+				}
+				100% {
+					box-shadow:
+						0 0 0 0 rgba(2, 156, 253, 0),
+						0 0 0 0 rgba(2, 156, 253, 0);
+				}
+			}
+		</style>
+		<script>
+			function onWindowResize(mediaQuery, callback) {
+				const mediaQueryList = window.matchMedia(mediaQuery);
+
+				const handleWindowSizeChange = (mediaQueryList) => {
+					if (mediaQueryList.matches) {
+						callback();
+					}
+				};
+				handleWindowSizeChange(mediaQueryList);
+
+				const resizeHandler = () => handleWindowSizeChange(mediaQueryList);
+				window.addEventListener('resize', resizeHandler);
+
+				return {
+					removeListener: () => {
+						window.removeEventListener('resize', resizeHandler);
+					},
+				};
+			}
+
+			// Docs => https://driverjs.com/docs/
+			const driver = window.driver.js.driver;
+			const DRIVER = driver({
+				// allowClose: false, // default: false
+				// popoverClass: 'custom-class',
+				smoothScroll: true,
+				overlayOpacity: 0.8,
+				stageRadius: 10,
+				popoverOffset: 20,
+				showProgress: true,
+				progressText: 'Step {{current}} of {{total}}',
+				nextBtnText: 'Next',
+				prevBtnText: 'Previous',
+				doneBtnText: 'Done',
+				steps: [
+					{
+						element: '.user-profile a',
+						popover: {
+							title: 'Title',
+							description: 'Description',
+						},
+						onHighlightStarted: (element, step, options) => {
+							const windowResizeListener = onWindowResize('(max-width: 768px)', () => {
+								document.querySelector('.sidebar-toggle')?.click();
+							});
+							// To remove the event listener when needed:
+							// windowResizeListener.removeListener();
+						},
+					},
+					{
+						element: '.user-profile img',
+						popover: {
+							title: 'Title',
+							description: 'Description',
+						},
+						onNextClick: (element, step, options) => {
+							document.querySelector('.sidebar-toggle')?.click();
+							DRIVER.moveNext();
+						},
+						// onPrevClick: (element, step, options) => {
+						// 	document.querySelector(".sidebar-toggle")?.click();
+						// 	DRIVER.movePrevious();
+						// }
+					},
+					{
+						element: '#description',
+						popover: {
+							title: 'Title',
+							description: 'Description',
+							side: 'left',
+							align: 'start',
+							onNextClick: () => {
+								DRIVER.moveNext();
+							},
+						},
+					},
+					{
+						element: '.btn-click-me',
+						popover: {
+							title: 'Interactive story playground',
+							description: 'See how a story renders with different data and state without touching code.',
+						},
+						onHighlightStarted: (element, step, options) => {
+							element.classList.add('pulsate');
+						},
+						onDeselected: (element, step, options) => {
+							element.classList.remove('pulsate');
+						},
+					},
+					{ element: '#post-1', popover: { title: 'Title', description: 'Description' } },
+					{ element: '#post-3 .btn-show-more', popover: { title: 'Title', description: 'Description' } },
+				],
+				onPopoverRender: (popover, { config, state }) => {
+					const {
+						wrapper,
+						arrow,
+						title,
+						description,
+						footer,
+						progress,
+						previousButton,
+						nextButton,
+						closeButton,
+						footerButtons,
+					} = popover;
+					const firstButton = document.createElement('button');
+					firstButton.innerText = 'Go to First';
+					popover.footerButtons.appendChild(firstButton);
+
+					firstButton.addEventListener('click', () => {
+						DRIVER.drive(0);
+					});
+				},
+				onDestroyStarted: () => {
+					if (!DRIVER.hasNextStep() || confirm('Are you sure?')) {
+						DRIVER.destroy();
+					}
+				},
+				// onDeselected: (element, step, options) => {},
+				// onDestroyed: (element, step, options) => {},
+				// onHighlightStarted: (element, step, options) => {},
+				// onHighlighted: (element, step, options) => {},
+				// onNextClick: (element, step, options) => {},
+				// onPrevClick: (element, step, options) => {},
+				// onCloseClick: (element, step, options) => {}
+			});
+
+			DRIVER.drive();
+		</script>
+	</body>
+</html>

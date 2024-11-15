@@ -149,9 +149,31 @@ class ShoppingCart {
 
     updateCart() {
         this.displayCart();
-        this.cartQuantity.textContent = this.getQuantity()
-        this.shoppingCartTotal.textContent = '$' + this.calculateTotal().toFixed(2)
-        this.subtotalSpan.textContent = '$' + this.calculateTotal().toFixed(2)
+        this.cartQuantity.textContent = this.getQuantity();
+        this.shoppingCartTotal.textContent = '$' + this.calculateTotal().toFixed(2);
+        this.subtotalSpan.textContent = '$' + this.calculateTotal().toFixed(2);
+
+        const copySubtotalSpan = this.subtotalSpan.parentNode.cloneNode(true);
+        const parentSubtotalSpan = this.subtotalSpan.parentNode.parentNode;
+        parentSubtotalSpan.innerHTML = ``
+        parentSubtotalSpan.appendChild(copySubtotalSpan);
+        this.items.forEach(item => {
+            const div = document.createElement("div");
+            div.classList.add("hstack", "justify-content-between", "align-items-center")
+            const name = document.createElement("small");
+            name.classList.add("text-black-50")
+            const value = document.createElement("small");
+            value.classList.add("text-black-50")
+            name.textContent = `–${item.name}`;
+            value.textContent = `$${item.price}x${item.quantity}`
+
+            div.appendChild(name);
+            div.appendChild(value);
+
+            parentSubtotalSpan.appendChild(div);
+        });
+
+
     }
 
 
